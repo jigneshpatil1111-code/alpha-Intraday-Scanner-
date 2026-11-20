@@ -2,7 +2,7 @@ import asyncio
 import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from backend.app.services.market_data import market_data, NSE_FNO_UNIVERSE
-from backend.app.services.scanner_service import scanner_service
+from backend.app.services.angel_service import angel_service
 
 router = APIRouter(tags=["WebSockets"])
 
@@ -19,11 +19,11 @@ class ConnectionManager:
             self.active_connections.remove(websocket)
 
     async def broadcast_json(self, data: dict):
-        for conn in self.active_connections:
+        for conn in list(self.active_connections):
             try:
                 await conn.send_json(data)
             except Exception:
-                pass
+                self.disconnect(conn)
 
 manager = ConnectionManager()
 
@@ -31,37 +31,62 @@ manager = ConnectionManager()
 async def websocket_tick_stream(websocket: WebSocket):
     """
     High-frequency WebSocket endpoint.
-    Streams tick fluctuations and real-time EMA/VWAP updates every 1-2 seconds.
+    Streams tick updates for ALL 179+ F&O stocks every 1 second.
+    If Angel One is connected, fetches real data; otherwise uses simulation.
     """
     await manager.connect(websocket)
     try:
-        counter = 0
+        batch_idx = 0
+        batch_size = 30  # Update 30 stocks per tick cycle, rotating through all
+        total = len(NSE_FNO_UNIVERSE)
+
         while True:
-            # Update random 3-5 stocks with new ticks
             updated_quotes = []
-            for item in NSE_FNO_UNIVERSE[:10]:
-                q = market_data.update_tick(item['symbol'])
-                updated_quotes.append(q)
+            start = batch_idx * batch_size
+            end = min(start + batch_size, total)
+            batch_items = NSE_FNO_UNIVERSE[start:end]
+
+            for item in batch_items:
+                sym = item['symbol']
+                # If Angel One is live-connected with JWT, fetch real quote
+                if angel_service.is_connected and angel_service.jwt_token:
+                    q = angel_service.fetch_live_quote(sym)
+                else:
+                    q = market_data.update_tick(sym)
+                if q:
+                    updated_quotes.append({
+                        "symbol": q.get("symbol", sym),
+                        "ltp": q.get("ltp", 0),
+                        "change_pct": q.get("change_pct", 0),
+                        "high": q.get("high", 0),
+                        "low": q.get("low", 0),
+                        "volume": q.get("volume", 0),
+                        "change": q.get("change", 0)
+                    })
+
+            # Advance batch rotation
+            batch_idx += 1
+            if end >= total:
+                batch_idx = 0
+
+            # Count overall market breadth
+            all_quotes = market_data.live_quotes
+            bullish = sum(1 for v in all_quotes.values() if v.get('change_pct', 0) > 0)
+            bearish = sum(1 for v in all_quotes.values() if v.get('change_pct', 0) < 0)
 
             payload = {
                 "type": "TICK_UPDATE",
-                "timestamp": asyncio.get_event_loop().time(),
-                "ticks": updated_quotes
+                "ticks": updated_quotes,
+                "market_breadth": {
+                    "bullish": bullish,
+                    "bearish": bearish,
+                    "total": total
+                },
+                "angel_live": angel_service.is_connected and angel_service.jwt_token is not None
             }
 
-            counter += 1
-            # Every 10 ticks, broadcast fresh scanner summary
-            if counter % 10 == 0:
-                scan = scanner_service.run_scan()
-                payload["scanner_summary"] = {
-                    "timestamp": scan.timestamp,
-                    "bullish": scan.bullish_count,
-                    "bearish": scan.bearish_count,
-                    "strong_count": len(scan.strong_signals)
-                }
-
             await websocket.send_json(payload)
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(1.0)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
     except Exception:

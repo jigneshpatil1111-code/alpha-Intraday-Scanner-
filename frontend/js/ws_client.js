@@ -1,11 +1,12 @@
 /**
- * AlphaPulse IN — WebSocket Live Data Sync Client
+ * AlphaPulse IN — WebSocket Live Data Sync Client V2
+ * Handles full market tick updates and data source detection
  */
 
 class WSClient {
-  constructor(endpoint, onTick, onSummary) {
+  constructor(endpoint, onData, onSummary) {
     this.endpoint = endpoint || `ws://${window.location.host}/api/ws/ticks`;
-    this.onTick = onTick;
+    this.onData = onData;
     this.onSummary = onSummary;
     this.socket = null;
     this.isConnected = false;
@@ -19,17 +20,14 @@ class WSClient {
       this.socket.onopen = () => {
         this.isConnected = true;
         this.reconnectAttempts = 0;
-        this.updateBadge('CONNECTED', '#10b981');
+        console.log('[WS] Connected to live tick stream');
       };
 
       this.socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'TICK_UPDATE') {
-            if (this.onTick) this.onTick(data.ticks);
-            if (data.scanner_summary && this.onSummary) {
-              this.onSummary(data.scanner_summary);
-            }
+            if (this.onData) this.onData(data);
           }
         } catch (e) {
           console.error("WS Parse error:", e);
@@ -38,32 +36,22 @@ class WSClient {
 
       this.socket.onclose = () => {
         this.isConnected = false;
-        this.updateBadge('OFFLINE / LOCAL', '#f59e0b');
         this.scheduleReconnect();
       };
 
       this.socket.onerror = () => {
         this.isConnected = false;
-        this.updateBadge('OFFLINE / LOCAL', '#f59e0b');
       };
     } catch (e) {
       this.isConnected = false;
-      this.updateBadge('STANDALONE', '#94a3b8');
     }
   }
 
   scheduleReconnect() {
-    if (this.reconnectAttempts < 5) {
+    if (this.reconnectAttempts < 10) {
       this.reconnectAttempts++;
       setTimeout(() => this.connect(), 3000);
     }
-  }
-
-  updateBadge(label, color) {
-    const dot = document.getElementById('backend-status-dot');
-    const txt = document.getElementById('backend-status-label');
-    if (dot) dot.style.backgroundColor = color;
-    if (txt) txt.textContent = label;
   }
 }
 

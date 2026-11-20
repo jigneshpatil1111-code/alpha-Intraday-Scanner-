@@ -4,13 +4,13 @@ from backend.app.services.market_data import market_data, NSE_FNO_UNIVERSE
 from backend.app.core.strategy_engine import StrategyEngine
 from backend.app.core.kronos_engine import kronos_engine
 from backend.app.services.sector_service import sector_service
-from backend.app.models.schemas import StockQuote, ScannerResponse
+from backend.app.models.schemas import StockQuote
 
 class ScannerService:
     """
-    Continuous Multi-Stock 9 & 15 EMA + VWAP Scanner for Full NSE F&O Universe (179+ Stocks).
-    Features Kronos K-Line Multi-Step Candlestick Simulation & Sector Money Flow Confluence.
-    Filters out weak setups and recommends ONLY high-probability strong momentum stocks.
+    Full NSE F&O Scanner with Kronos simulation.
+    Separates recommendations into INTRADAY vs SWING categories.
+    Each recommendation has full Entry / SL / Target / Chart simulation.
     """
 
     def __init__(self):
@@ -19,15 +19,14 @@ class ScannerService:
         self.last_scan_time: str = ""
 
     def run_scan(self) -> Dict[str, Any]:
-        """Executes a full sweep over all NSE F&O universe stocks with Kronos & Sector filtering."""
+        """Full sweep over all NSE F&O universe stocks."""
         raw_stocks: List[Dict[str, Any]] = []
         results: List[StockQuote] = []
         bullish = 0
         bearish = 0
         neutral = 0
-        strong_signals = []
 
-        # 1. Evaluate Strategy Signals for all 179 stocks
+        # 1. Evaluate Strategy Signals for all stocks
         for item in NSE_FNO_UNIVERSE:
             sym = item['symbol']
             sector = item['sector']
@@ -75,45 +74,95 @@ class ScannerService:
             }
             raw_stocks.append(stock_dict)
 
-        # 2. Institutional Sector Flow & Heatmap Analysis
+        # 2. Sector Flow Analysis
         sector_analysis = sector_service.analyze_sectors(raw_stocks)
         inflow_sectors = {s["sector"]: s for s in sector_analysis["top_inflow_sectors"]}
         outflow_sectors = {s["sector"]: s for s in sector_analysis["top_outflow_sectors"]}
 
-        # 3. Kronos K-Line Simulation & Strict Strong Momentum Filtering
-        recommended_top_picks = []
+        # 3. Kronos Simulation + Confluence Scoring + Intraday/Swing Classification
+        intraday_picks = []
+        swing_picks = []
 
         for s in raw_stocks:
             sym = s["symbol"]
             df = s["df"]
-            recent_candles = df.tail(15).to_dict(orient="records")
+            recent_candles = df.tail(20).to_dict(orient="records")
 
-            # Run Kronos Multi-Step Candlestick Simulation
+            # Kronos simulation
             kronos_sim = kronos_engine.simulate_future_k_lines(sym, recent_candles, horizon=5)
             s["kronos_forecast"] = kronos_sim["direction"]
             s["kronos_delta_pct"] = kronos_sim["delta_pct"]
             s["kronos_confidence"] = kronos_sim["confidence"]
             s["kronos_projected_candles"] = kronos_sim["projected_candles"]
 
-            # Strict Strategy + Kronos + Sector Confluence:
-            # - Long recommendation requires:
-            #   1) 9 EMA > 15 EMA & Price > VWAP (BUY/STRONG_BUY)
-            #   2) Kronos forecasts Positive Momentum (delta > 0)
-            #   3) Sector is in Inflow / Positive territory
+            # Confluence check
             is_valid_long = ("BUY" in s["signal"]) and (kronos_sim["delta_pct"] >= 0.3)
             is_valid_short = ("SELL" in s["signal"]) and (kronos_sim["delta_pct"] <= -0.3)
 
-            # Check sector alignment bonus
             sec_name = s["sector"]
             has_sector_support = (is_valid_long and sec_name in inflow_sectors) or (is_valid_short and sec_name in outflow_sectors)
 
-            if (is_valid_long or is_valid_short) and s["volume_surge"] >= 1.2:
+            if (is_valid_long or is_valid_short) and s["volume_surge"] >= 1.1:
                 confluence_score = s["alpha_score"] * 0.4 + kronos_sim["confidence"] * 0.4 + (20.0 if has_sector_support else 5.0)
                 s["confluence_score"] = round(min(99.0, confluence_score), 1)
                 s["has_sector_tailwind"] = has_sector_support
 
-                if s["confluence_score"] >= 80.0:
-                    recommended_top_picks.append(s)
+                # Build trade plan
+                ltp = s["ltp"]
+                atr_range = s["high"] - s["low"]
+                atr = max(ltp * 0.005, atr_range * 0.3)
+
+                if is_valid_long:
+                    entry = ltp
+                    sl = round(ltp - atr, 2)
+                    t1 = round(ltp + atr * 1.5, 2)
+                    t2 = round(ltp + atr * 2.5, 2)
+                    side = "BUY"
+                else:
+                    entry = ltp
+                    sl = round(ltp + atr, 2)
+                    t1 = round(ltp - atr * 1.5, 2)
+                    t2 = round(ltp - atr * 2.5, 2)
+                    side = "SELL"
+
+                risk = abs(entry - sl)
+                reward = abs(t2 - entry)
+
+                pick = {
+                    "symbol": sym,
+                    "sector": sec_name,
+                    "ltp": ltp,
+                    "change_pct": s["change_pct"],
+                    "signal": s["signal"],
+                    "side": side,
+                    "entry": round(entry, 2),
+                    "stop_loss": sl,
+                    "target_1": t1,
+                    "target_2": t2,
+                    "risk_reward": f"1:{round(reward / max(0.5, risk), 1)}",
+                    "alpha_score": s["alpha_score"],
+                    "confluence_score": s["confluence_score"],
+                    "volume_surge": s["volume_surge"],
+                    "lot_size": s["lot_size"],
+                    "kronos_forecast": s["kronos_forecast"],
+                    "kronos_delta_pct": s["kronos_delta_pct"],
+                    "kronos_confidence": kronos_sim["confidence"],
+                    "has_sector_tailwind": has_sector_support,
+                    "projected_candles": s["kronos_projected_candles"]
+                }
+
+                # Classify: INTRADAY (strong delta, fresh cross, high volume)
+                # vs SWING (moderate delta, aligned trend, sector tailwind)
+                is_strong_cross = "STRONG" in s["signal"]
+                is_high_momentum = abs(kronos_sim["delta_pct"]) >= 0.9 and s["volume_surge"] >= 1.3
+
+                if is_strong_cross or is_high_momentum:
+                    if s["confluence_score"] >= 75.0:
+                        intraday_picks.append(pick)
+                elif has_sector_support and s["confluence_score"] >= 72.0:
+                    swing_picks.append(pick)
+                elif s["confluence_score"] >= 78.0:
+                    intraday_picks.append(pick)
 
             # Build Pydantic StockQuote
             quote = StockQuote(
@@ -137,38 +186,20 @@ class ScannerService:
                 target_2=s["target_2"],
                 risk_reward=s["risk_reward"],
                 lot_size=s["lot_size"],
-                kronos_forecast=s["kronos_forecast"],
-                kronos_delta_pct=s["kronos_delta_pct"]
+                kronos_forecast=s.get("kronos_forecast", "CHOPPY"),
+                kronos_delta_pct=s.get("kronos_delta_pct", 0.0)
             )
             results.append(quote)
-            if "STRONG" in quote.signal:
-                strong_signals.append(quote)
 
-        # Sort recommended top picks by Confluence Score descending
-        recommended_top_picks.sort(key=lambda x: -x.get("confluence_score", 0))
-        top_picks_out = []
-        for p in recommended_top_picks[:5]:
-            top_picks_out.append({
-                "symbol": p["symbol"],
-                "sector": p["sector"],
-                "ltp": p["ltp"],
-                "change_pct": p["change_pct"],
-                "signal": p["signal"],
-                "alpha_score": p["alpha_score"],
-                "confluence_score": p.get("confluence_score", 85.0),
-                "suggested_sl": p["suggested_sl"],
-                "target_1": p["target_1"],
-                "target_2": p["target_2"],
-                "risk_reward": p["risk_reward"],
-                "volume_surge": p["volume_surge"],
-                "lot_size": p["lot_size"],
-                "kronos_forecast": p["kronos_forecast"],
-                "kronos_delta_pct": p["kronos_delta_pct"],
-                "has_sector_tailwind": p.get("has_sector_tailwind", True),
-                "projected_candles": p["kronos_projected_candles"]
-            })
+        # Sort picks by confluence score
+        intraday_picks.sort(key=lambda x: -x.get("confluence_score", 0))
+        swing_picks.sort(key=lambda x: -x.get("confluence_score", 0))
 
-        # Sort all stocks by Alpha Score descending
+        # Limit to top picks
+        intraday_picks = intraday_picks[:8]
+        swing_picks = swing_picks[:8]
+
+        # Sort all stocks
         results.sort(key=lambda q: (0 if "STRONG" in q.signal else 1, -q.alpha_score))
 
         self.cached_results = results
@@ -181,8 +212,8 @@ class ScannerService:
             "bullish_count": bullish,
             "bearish_count": bearish,
             "neutral_count": neutral,
-            "strong_signals_count": len(strong_signals),
-            "top_profit_picks": top_picks_out,
+            "intraday_picks": intraday_picks,
+            "swing_picks": swing_picks,
             "sector_analysis": sector_analysis
         }
 
