@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AlphaPulse IN — Live Quant Terminal | Intraday & Swing Scanner</title>
+  <title>AlphaPulse IN — Master Quant Terminal | 179 F&amp;O + Kronos AI</title>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
   <link rel="stylesheet" href="css/custom.css" />
+  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -30,105 +36,142 @@
   <!-- ===================================================================== -->
   <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-[radial-gradient(ellipse_at_top,_rgba(6,182,212,0.15),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(139,92,246,0.12),_transparent_50%)]">
     <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-      <!-- Left Brand Panel -->
+      
+      <!-- Brand & Information Panel -->
       <div class="lg:col-span-6 glass-panel border border-slate-800/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
         <div class="space-y-5">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/20">αP</div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/20">
+              αP
+            </div>
             <div>
               <h1 class="text-xl font-extrabold tracking-tight text-white">AlphaPulse IN</h1>
-              <p class="text-[11px] font-mono text-cyan-300">9 & 15 EMA + VWAP • 179 F&O QUANT TERMINAL</p>
+              <p class="text-[11px] font-mono text-cyan-300">9 &amp; 15 EMA + VWAP • 179 F&amp;O QUANT TERMINAL</p>
             </div>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-            Live Market <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Intraday & Swing</span> Scanner
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-            Scan all 179 NSE F&O stocks with <strong class="text-slate-200">Kronos K-Line AI simulation</strong>, separate Intraday & Swing recommendations with Entry, SL, Target, and live market data via Angel One SmartAPI.
-          </p>
+
+          <div class="space-y-2 pt-1">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+              Institutional <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Section-Wise</span> Quant Terminal
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Every section separated for maximum focus &amp; zero choppiness: Intraday setups, Swing picks, Kronos AI forward K-line simulation, Sector money flow, and full 179 F&amp;O live scanner.
+            </p>
+          </div>
+
           <div class="grid grid-cols-2 gap-3 pt-2 text-xs">
             <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-              <div class="font-mono font-bold text-cyan-400">⚡ Live Market Feed</div>
-              <p class="text-slate-400 text-[11px]">Angel One SmartAPI 0-delay or high-fidelity simulation engine.</p>
+              <div class="font-mono font-bold text-cyan-400">⚡ Live Market Ticks</div>
+              <p class="text-slate-400 text-[11px]">Real-time tick engine with Angel One 0-delay stream.</p>
             </div>
             <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-              <div class="font-mono font-bold text-violet-400">🤖 Kronos AI Simulator</div>
-              <p class="text-slate-400 text-[11px]">5-candle forward simulation with Entry/SL/Target plan.</p>
+              <div class="font-mono font-bold text-violet-400">🤖 Kronos Simulation</div>
+              <p class="text-slate-400 text-[11px]">5-period forward candlestick simulation with Entry/SL/Target.</p>
             </div>
             <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-              <div class="font-mono font-bold text-emerald-400">📊 Section-wise Layout</div>
-              <p class="text-slate-400 text-[11px]">Dedicated Intraday & Swing sections with chart simulation.</p>
+              <div class="font-mono font-bold text-emerald-400">🔥 Intraday &amp; Swing</div>
+              <p class="text-slate-400 text-[11px]">Strict section-wise separation. Only selected section opens.</p>
             </div>
             <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-              <div class="font-mono font-bold text-amber-400">📡 Sector Flow Matrix</div>
-              <p class="text-slate-400 text-[11px]">Which sectors have max buying/selling pressure live.</p>
+              <div class="font-mono font-bold text-amber-400">📊 Sector Money Flow</div>
+              <p class="text-slate-400 text-[11px]">Live institutional buying vs selling across all 13 sectors.</p>
             </div>
           </div>
         </div>
+
         <div class="mt-6 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500">
-          <strong class="text-amber-300">SEBI Disclaimer:</strong> For research & simulation purposes only.
+          <strong class="text-amber-300">SEBI Disclaimer:</strong> For quant research &amp; paper simulation purposes.
         </div>
       </div>
 
-      <!-- Right Auth Card -->
+      <!-- Auth Gate Form -->
       <div class="lg:col-span-6 glass-panel border border-slate-800/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
         <div class="space-y-5">
           <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-2xl border border-slate-800">
-            <button id="auth-tab-login" onclick="setAuthMode('login')" class="py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer">Sign In</button>
-            <button id="auth-tab-signup" onclick="setAuthMode('signup')" class="py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition cursor-pointer">Create Account</button>
+            <button id="auth-tab-login" onclick="setAuthMode('login')" class="py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer">
+              Sign In
+            </button>
+            <button id="auth-tab-signup" onclick="setAuthMode('signup')" class="py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition cursor-pointer">
+              Create Account
+            </button>
           </div>
+
           <div id="auth-feedback" class="hidden p-3 rounded-xl text-xs font-mono border"></div>
-          <!-- SIGN IN -->
+
+          <!-- SIGN IN FORM -->
           <form id="login-form" onsubmit="handleTraderLogin(event)" class="space-y-4">
             <div class="space-y-1.5">
               <label class="block text-xs font-medium text-slate-300">Trader Email</label>
               <input id="login-email" type="email" required placeholder="trader@alphapulse.in" value="trader@alphapulse.in" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" />
             </div>
+
             <div class="space-y-1.5">
               <label class="block text-xs font-medium text-slate-300">Password</label>
               <input id="login-password" type="password" required placeholder="Enter password" value="Trader@1234" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" />
             </div>
-            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 transition cursor-pointer">Sign In to Terminal →</button>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 transition cursor-pointer">
+              Enter Quant Terminal →
+            </button>
           </form>
-          <!-- SIGN UP -->
+
+          <!-- SIGN UP FORM -->
           <form id="signup-form" onsubmit="handleTraderSignup(event)" class="hidden space-y-3.5">
-            <div class="space-y-1"><label class="block text-xs font-medium text-slate-300">Full Name</label><input id="signup-name" type="text" required placeholder="Aarav Patel" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" /></div>
-            <div class="space-y-1"><label class="block text-xs font-medium text-slate-300">Email</label><input id="signup-email" type="email" required placeholder="trader@domain.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" /></div>
-            <div class="space-y-1"><label class="block text-xs font-medium text-slate-300">Password</label><input id="signup-password" type="password" required placeholder="Min 8 characters" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" /></div>
-            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 transition cursor-pointer">Register →</button>
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-slate-300">Full Name</label>
+              <input id="signup-name" type="text" required placeholder="Trader Name" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" />
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-slate-300">Email Address</label>
+              <input id="signup-email" type="email" required placeholder="trader@alphapulse.in" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" />
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-slate-300">Strong Password</label>
+              <input id="signup-password" type="password" required placeholder="Min 8 characters" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600 font-mono" />
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 transition cursor-pointer">
+              Register Account →
+            </button>
           </form>
         </div>
-        <div class="text-[11px] text-slate-500 font-mono text-center pt-4">PBKDF2-SHA256 Encrypted Session</div>
+
+        <div class="text-[11px] text-slate-500 font-mono text-center pt-4">
+          PBKDF2-SHA256 Encrypted Session • Fast In-Memory State
+        </div>
       </div>
+
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- SCREEN 2: MAIN DASHBOARD — ALL SECTIONS VISIBLE (NO TABS)             -->
+  <!-- SCREEN 2: MAIN DASHBOARD SHELL                                        -->
   <!-- ===================================================================== -->
   <div id="dashboard-shell" class="hidden min-h-screen flex flex-col">
 
-    <!-- STICKY HEADER -->
+    <!-- Top Master Header -->
     <header class="sticky top-0 z-40 bg-[#050811]/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
       <div class="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Brand -->
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20">αP</div>
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20">
+            αP
+          </div>
           <div>
             <div class="flex items-center gap-2">
               <h1 class="text-lg font-extrabold tracking-tight text-white">AlphaPulse IN</h1>
-              <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">179+ F&O</span>
+              <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">179 F&amp;O</span>
+              <span id="data-source-badge" class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                <span id="data-source-dot" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="data-source-label">SIMULATION MODE</span>
+              </span>
             </div>
-            <p class="text-[11px] font-mono text-slate-400">9 & 15 EMA + VWAP • Kronos AI • Live Market</p>
+            <p class="text-[11px] font-mono text-slate-400">9 &amp; 15 EMA + VWAP • Kronos K-Line Foundation Model</p>
           </div>
         </div>
 
+        <!-- Telemetry & Controls -->
         <div class="flex flex-wrap items-center gap-2.5 text-xs font-mono">
-          <!-- Data Source Badge -->
-          <div id="data-source-badge" class="px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-1.5">
-            <span id="data-source-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            <span id="data-source-label">SIMULATION MODE</span>
-          </div>
-
           <!-- Market Breadth -->
           <div class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2">
             <span class="text-slate-400 text-[11px]">BREADTH:</span>
@@ -136,295 +179,490 @@
             <span class="text-rose-400 font-bold">▼ <span id="market-bear-count">--</span></span>
           </div>
 
-          <!-- Angel One Connect -->
+          <!-- Angel One Connect Button -->
           <button onclick="openAngelModal()" class="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 font-bold flex items-center gap-1.5 transition cursor-pointer">
             <span id="angel-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span id="angel-header-label">Connect Angel One</span>
           </button>
 
-          <!-- User & Logout -->
+          <!-- User Badge & Logout -->
           <div class="flex items-center gap-2 pl-1">
             <span id="header-user-name" class="text-slate-300 font-bold">Trader</span>
-            <button onclick="handleLogout()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-[11px] transition cursor-pointer">Exit</button>
+            <button onclick="handleLogout()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-[11px] transition cursor-pointer">
+              Exit
+            </button>
           </div>
         </div>
+
       </div>
     </header>
 
-    <!-- MAIN CONTENT — ALL SECTIONS STACKED -->
-    <main class="max-w-[1440px] mx-auto p-4 sm:p-6 space-y-8 flex-1 w-full">
+    <!-- ================================================================= -->
+    <!-- MASTER NAVIGATION BAR: SECTION SWITCHER (STRICT SECTION SEPARATION)-->
+    <!-- When clicked, ONLY the selected section is visible!               -->
+    <!-- ================================================================= -->
+    <div class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-2 sticky top-[61px] z-30 backdrop-blur-md">
+      <div class="max-w-[1440px] mx-auto flex items-center gap-2 overflow-x-auto scrollbar-none py-1">
+        
+        <button id="nav-btn-intraday" onclick="switchSection('intraday')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>🔥</span> <span>Intraday Picks</span>
+        </button>
+
+        <button id="nav-btn-swing" onclick="switchSection('swing')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>📈</span> <span>Swing Stocks</span>
+        </button>
+
+        <button id="nav-btn-kronos" onclick="switchSection('kronos')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>🤖</span> <span>Kronos AI Simulator</span>
+        </button>
+
+        <button id="nav-btn-sectors" onclick="switchSection('sectors')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>📊</span> <span>Sector Money Flow</span>
+        </button>
+
+        <button id="nav-btn-scanner" onclick="switchSection('scanner')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>📋</span> <span>179 F&amp;O Scanner</span>
+        </button>
+
+        <button id="nav-btn-paper" onclick="switchSection('paper')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>💼</span> <span>Paper OMS &amp; P&amp;L</span>
+        </button>
+
+        <button id="nav-btn-broker" onclick="switchSection('broker')" class="nav-section-btn py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800 transition whitespace-nowrap cursor-pointer flex items-center gap-1.5">
+          <span>⚙️</span> <span>Angel One Live</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- MAIN WORKSPACE: ONLY ONE SECTION IS DISPLAYED AT A TIME           -->
+    <!-- ================================================================= -->
+    <main class="max-w-[1440px] mx-auto p-4 sm:p-6 flex-1 w-full">
 
       <!-- ================================================================= -->
-      <!-- SECTION 1: 🔥 INTRADAY PICKS — Kronos Simulated with Entry/SL/TGT -->
+      <!-- SECTION 1: 🔥 INTRADAY PICKS (ONLY THIS SHOWS WHEN SELECTED)       -->
       <!-- ================================================================= -->
-      <section class="space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">🔥</span>
-            <h2 class="text-lg font-extrabold text-white tracking-tight">Intraday Stocks — Kronos AI Simulation</h2>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">TODAY'S TRADES</span>
-          </div>
-          <span class="text-xs font-mono text-slate-400">Strong Momentum + 9/15 EMA Cross + VWAP Confirmed • Entry/SL/Target</span>
-        </div>
-
-        <div id="intraday-picks-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-          <div class="p-6 glass-panel rounded-2xl border border-slate-800 text-center text-slate-500 text-sm font-mono col-span-full">
-            ⏳ Scanning 179 F&O stocks for intraday setups...
-          </div>
-        </div>
-      </section>
-
-      <!-- ================================================================= -->
-      <!-- SECTION 2: 📈 SWING PICKS — Sector Tailwind + Trend Aligned       -->
-      <!-- ================================================================= -->
-      <section class="space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
-            <span class="text-2xl">📈</span>
-            <h2 class="text-lg font-extrabold text-white tracking-tight">Swing Stocks — Multi-Day Momentum</h2>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">2-5 DAY HOLDS</span>
-          </div>
-          <span class="text-xs font-mono text-slate-400">Sector Aligned + Trend Confirmed + Kronos Forward Projection</span>
-        </div>
-
-        <div id="swing-picks-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-          <div class="p-6 glass-panel rounded-2xl border border-slate-800 text-center text-slate-500 text-sm font-mono col-span-full">
-            ⏳ Scanning for swing setups...
-          </div>
-        </div>
-      </section>
-
-      <!-- ================================================================= -->
-      <!-- SECTION 3: 📊 SECTOR FLOW HEATMAP                                 -->
-      <!-- ================================================================= -->
-      <section class="glass-panel rounded-3xl p-5 space-y-4 border border-slate-800/90 shadow-xl">
+      <section id="section-intraday" class="section-container space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              <span>📊 Sector Money Flow & Heatmap</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">Live Aggregator</span>
-            </h3>
-            <p class="text-xs text-slate-400">Where smart money is buying vs selling across sectors.</p>
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🔥</span>
+              <h2 class="text-xl font-extrabold text-white tracking-tight">Intraday High-Momentum Stocks</h2>
+              <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                TODAY'S INTRADAY SETUPS
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Strict 9/15 EMA crossover + VWAP confluence + Kronos forward momentum. Click <strong>🤖 Simulate</strong> on any card to view its interactive K-line simulation chart.
+            </p>
           </div>
-          <div class="flex items-center gap-2 font-mono text-xs">
-            <span class="text-slate-400">Drill-down:</span>
-            <select id="sector-drilldown-select" onchange="selectSectorDrilldown(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"></select>
+          <button onclick="refreshScannerData()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-cyan-300 transition">
+            🔄 Refresh Scanner
+          </button>
+        </div>
+
+        <!-- Rendered Intraday Cards Grid -->
+        <div id="intraday-cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 2: 📈 SWING STOCKS (ONLY THIS SHOWS WHEN SELECTED)         -->
+      <!-- ================================================================= -->
+      <section id="section-swing" class="section-container hidden space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">📈</span>
+              <h2 class="text-xl font-extrabold text-white tracking-tight">Swing High-Conviction Stocks</h2>
+              <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40">
+                2-5 DAY MOMENTUM HOLDS
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Multi-day trend continuation confirmed by institutional sector tailwinds and Kronos forward trajectory.
+            </p>
+          </div>
+          <button onclick="refreshScannerData()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-violet-300 transition">
+            🔄 Refresh Swing
+          </button>
+        </div>
+
+        <!-- Rendered Swing Cards Grid -->
+        <div id="swing-cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 3: 🤖 KRONOS AI SIMULATOR (DEDICATED FULL SCREEN SIMULATOR)-->
+      <!-- ================================================================= -->
+      <section id="section-kronos" class="section-container hidden space-y-5">
+        
+        <!-- Simulator Top Control Bar -->
+        <div class="glass-panel rounded-3xl p-5 border border-violet-500/50 shadow-2xl space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🤖</span>
+                <h2 class="text-xl font-black text-white tracking-tight">Kronos K-Line Foundation Model Simulator</h2>
+                <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40">
+                  shiyu-coder/Kronos
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Autoregressive transformer simulating future 5 candlesticks (+25 mins) with Entry, Stop Loss &amp; Target corridors.
+              </p>
+            </div>
+
+            <!-- Stock Picker Dropdown -->
+            <div class="flex items-center gap-3 font-mono text-xs">
+              <span class="text-slate-400">Select Stock:</span>
+              <select id="kronos-stock-select" onchange="runKronosSimulation(this.value)" class="px-3 py-2 rounded-xl bg-slate-950 border border-violet-500/50 text-white font-bold focus:outline-none focus:border-cyan-400 cursor-pointer">
+                <!-- Populated dynamically with all 179 stocks -->
+              </select>
+              <button onclick="runKronosSimulation(document.getElementById('kronos-stock-select').value)" class="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-400 hover:to-cyan-400 text-slate-950 font-black shadow-lg shadow-violet-500/20 transition cursor-pointer">
+                ▶ Re-Simulate
+              </button>
+            </div>
+          </div>
+
+          <!-- Simulator Telemetry Row -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 font-mono text-xs pt-1">
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <div class="text-[10px] text-slate-400">ACTIVE STOCK</div>
+              <div id="sim-hud-symbol" class="text-lg font-black text-white">RELIANCE</div>
+              <div id="sim-hud-ltp" class="text-xs text-cyan-400 font-bold">₹--</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <div class="text-[10px] text-slate-400">KRONOS FORECAST</div>
+              <div id="sim-hud-direction" class="text-lg font-black text-emerald-400">BULLISH</div>
+              <div id="sim-hud-delta" class="text-xs text-emerald-300 font-bold">+1.85%</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <div class="text-[10px] text-slate-400">MODEL PROBABILITY</div>
+              <div id="sim-hud-confidence" class="text-lg font-black text-cyan-300">88.5%</div>
+              <div class="text-[10px] text-slate-500">Confidence Tier A</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <div class="text-[10px] text-slate-400">MONTE CARLO CONSENSUS</div>
+              <div id="sim-hud-consistency" class="text-lg font-black text-violet-300">85%</div>
+              <div class="text-[10px] text-slate-500">Path Alignment</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="text-[10px] text-slate-400">TRADE ACTION</div>
+                <div id="sim-hud-side" class="text-base font-black text-emerald-400">BUY LONG</div>
+              </div>
+              <button id="sim-btn-quick-trade" onclick="executeSimulatedTrade()" class="w-full py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-[11px] shadow transition">
+                ⚡ Paper Trade
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <!-- Top Buying Sectors -->
-          <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/70 border border-emerald-500/40 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono font-bold text-emerald-400">▲ TOP BUYING SECTORS</span>
-              <span class="text-[10px] font-mono text-slate-400">Institutional Inflow</span>
-            </div>
-            <div id="sector-inflow-list" class="space-y-2"></div>
-          </div>
-          <!-- Top Selling Sectors -->
-          <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/70 border border-rose-500/40 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono font-bold text-rose-400">▼ TOP SELLING SECTORS</span>
-              <span class="text-[10px] font-mono text-slate-400">Institutional Outflow</span>
-            </div>
-            <div id="sector-outflow-list" class="space-y-2"></div>
-          </div>
-        </div>
-
-        <!-- Sector Drill-Down -->
-        <div class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+        <!-- Big Dedicated Interactive Candlestick + Kronos Projection Chart -->
+        <div class="glass-panel rounded-3xl p-5 border border-slate-800 space-y-3 shadow-xl">
           <div class="flex items-center justify-between">
-            <h4 id="drilldown-sector-title" class="text-xs font-mono font-bold text-white">Select a Sector</h4>
-            <span class="text-[10px] font-mono text-cyan-300">Stock Momentum Inside Sector</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
-            <div class="space-y-2">
-              <div class="text-[11px] font-bold text-emerald-400">🟢 Top Buying Stocks</div>
-              <div id="sector-top-buying-stocks" class="space-y-1.5"></div>
-            </div>
-            <div class="space-y-2">
-              <div class="text-[11px] font-bold text-rose-400">🔴 Top Selling Stocks</div>
-              <div id="sector-top-selling-stocks" class="space-y-1.5"></div>
+            <h3 class="text-sm font-bold text-white font-mono flex items-center gap-2">
+              <span>Historical Candlesticks &amp; Forward Projected Trajectory</span>
+              <span class="text-violet-400 text-xs">(Violet Zone = Kronos Simulation)</span>
+            </h3>
+            <div class="flex items-center gap-3 text-[11px] font-mono">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-cyan-400"></span> Entry</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Stop Loss</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-400"></span> Target 1</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-300"></span> Target 2</span>
             </div>
           </div>
+
+          <div class="w-full h-96 rounded-2xl bg-slate-950 border border-slate-800/90 p-2 relative overflow-hidden">
+            <canvas id="kronos-canvas" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <!-- Trade Plan & Projected Candles Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 font-mono text-xs">
+          
+          <!-- Trade Plan Card -->
+          <div class="lg:col-span-5 p-5 rounded-3xl bg-slate-950/80 border border-slate-800 space-y-3">
+            <h4 class="font-bold text-white text-sm">Suggested Trade Plan (Strict 1:2.5 RR)</h4>
+            
+            <div class="space-y-2.5 text-slate-300 pt-1">
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Recommended Action:</span>
+                <strong id="sim-plan-side" class="text-emerald-400 font-bold text-sm">BUY LONG</strong>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Calculated Entry Price:</span>
+                <strong id="sim-plan-entry" class="text-cyan-300 font-bold text-sm">₹--</strong>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Strict Stop Loss:</span>
+                <strong id="sim-plan-sl" class="text-rose-400 font-bold text-sm">₹--</strong>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Target 1 (1:1.5 RR):</span>
+                <strong id="sim-plan-t1" class="text-emerald-400 font-bold text-sm">₹--</strong>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Target 2 (1:2.5 RR):</span>
+                <strong id="sim-plan-t2" class="text-emerald-300 font-bold text-sm">₹--</strong>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span class="text-slate-400">Risk-to-Reward Ratio:</span>
+                <strong id="sim-plan-rr" class="text-amber-300 font-bold text-sm">1:2.5</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projected 5 Candles Table -->
+          <div class="lg:col-span-7 p-5 rounded-3xl bg-slate-950/80 border border-slate-800 space-y-3">
+            <h4 class="font-bold text-white text-sm">Simulated 5-Candle Forward Path (+25 Min Horizon)</h4>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+                    <th class="py-2.5 px-3">Horizon</th>
+                    <th class="py-2.5 px-3">Open</th>
+                    <th class="py-2.5 px-3">High</th>
+                    <th class="py-2.5 px-3">Low</th>
+                    <th class="py-2.5 px-3">Close</th>
+                    <th class="py-2.5 px-3">Est. Volume</th>
+                  </tr>
+                </thead>
+                <tbody id="sim-candles-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 4: 📊 SECTOR MONEY FLOW & HEATMAP MATRIX                  -->
+      <!-- ================================================================= -->
+      <section id="section-sectors" class="section-container hidden space-y-5">
+        <div class="glass-panel rounded-3xl p-5 space-y-4 border border-slate-800/90 shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>Institutional Sector Money Flow &amp; Heatmap</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">Live Inflow Engine</span>
+              </h3>
+              <p class="text-xs text-slate-400">Identifies which sectors have heavy institutional buying vs heavy selling.</p>
+            </div>
+
+            <!-- Sector Drilldown Select -->
+            <div class="flex items-center gap-2 font-mono text-xs">
+              <span class="text-slate-400">Inspect Sector:</span>
+              <select id="sector-drilldown-select" onchange="selectSectorDrilldown(this.value)" class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500 cursor-pointer">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Inflow vs Outflow Sector Overview -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <!-- Top Buying Sectors -->
+            <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/70 border border-emerald-500/40 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+                  <span>▲</span> TOP BUYING SECTORS (Aggressive Inflow)
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">High Institutional Accumulation</span>
+              </div>
+              <div id="sector-inflow-list" class="space-y-2"></div>
+            </div>
+
+            <!-- Top Selling Sectors -->
+            <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/70 border border-rose-500/40 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-rose-400 flex items-center gap-1.5">
+                  <span>▼</span> TOP SELLING SECTORS (Heavy Outflow)
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">Institutional Distribution / Shorting</span>
+              </div>
+              <div id="sector-outflow-list" class="space-y-2"></div>
+            </div>
+          </div>
+
+          <!-- Sector Drill-Down: Top Buying Stocks vs Top Selling Stocks -->
+          <div class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 id="drilldown-sector-title" class="text-xs font-mono font-bold text-white">Banking Sector Deep-Dive</h4>
+              <span class="text-[10px] font-mono text-cyan-300">Click any stock to run Kronos simulation</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
+              <div class="space-y-2">
+                <div class="text-[11px] font-bold text-emerald-400">🟢 Top Accumulation / Buying Stocks in Sector</div>
+                <div id="sector-top-buying-stocks" class="space-y-1.5"></div>
+              </div>
+              <div class="space-y-2">
+                <div class="text-[11px] font-bold text-rose-400">🔴 Top Breakdown / Selling Stocks in Sector</div>
+                <div id="sector-top-selling-stocks" class="space-y-1.5"></div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
       <!-- ================================================================= -->
-      <!-- SECTION 4: KRONOS SIMULATION DETAIL (Selected Stock)               -->
+      <!-- SECTION 5: 📋 ALL 179 F&O MASTER SCANNER TABLE                    -->
       <!-- ================================================================= -->
-      <section id="kronos-detail-section" class="hidden glass-panel rounded-3xl p-5 space-y-4 border border-violet-500/40 shadow-xl">
-        <div class="flex flex-wrap items-center justify-between gap-3">
+      <section id="section-scanner" class="section-container hidden space-y-4">
+        <div class="glass-panel rounded-3xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>All 179 NSE F&amp;O Universe Scanner</span>
+                <span id="scanner-total-count" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">179 Stocks</span>
+              </h3>
+              <p class="text-xs text-slate-400">Live LTP updating with tick stream, 9 &amp; 15 EMA, VWAP, Signal and Kronos direction.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+              <input id="scanner-search" type="text" placeholder="Search symbol or sector..." class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-52" />
+              <select id="scanner-sort" class="px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500">
+                <option value="alpha_score">Sort by Alpha Score</option>
+                <option value="change_pct">Sort by % Change</option>
+                <option value="ltp">Sort by Stock Price</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sector Filter Chips -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            <button onclick="filterBySector('ALL')" data-sector="ALL" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition">All F&amp;O</button>
+            <button onclick="filterBySector('BANKING')" data-sector="BANKING" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Banking</button>
+            <button onclick="filterBySector('IT')" data-sector="IT" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">IT</button>
+            <button onclick="filterBySector('AUTO')" data-sector="AUTO" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Auto</button>
+            <button onclick="filterBySector('METALS')" data-sector="METALS" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Metals</button>
+            <button onclick="filterBySector('ENERGY')" data-sector="ENERGY" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Energy</button>
+            <button onclick="filterBySector('PHARMA')" data-sector="PHARMA" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Pharma</button>
+            <button onclick="filterBySector('POWER')" data-sector="POWER" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Power</button>
+            <button onclick="filterBySector('NBFC')" data-sector="NBFC" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">NBFC</button>
+            <button onclick="filterBySector('FMCG')" data-sector="FMCG" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">FMCG</button>
+          </div>
+
+          <!-- Scanner Table -->
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead class="sticky top-0 bg-slate-950/95 backdrop-blur-md z-10">
+                <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase tracking-wider">
+                  <th class="py-3 px-3">Symbol &amp; Sector</th>
+                  <th class="py-3 px-3">Live LTP</th>
+                  <th class="py-3 px-3">24h Change</th>
+                  <th class="py-3 px-3 text-cyan-400">9 EMA</th>
+                  <th class="py-3 px-3 text-violet-400">15 EMA</th>
+                  <th class="py-3 px-3 text-amber-400">VWAP</th>
+                  <th class="py-3 px-3">Signal</th>
+                  <th class="py-3 px-3 text-amber-400">Alpha Score</th>
+                  <th class="py-3 px-3 text-violet-400">Kronos AI</th>
+                  <th class="py-3 px-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="scanner-table-body" class="divide-y divide-slate-800/40"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 6: 💼 PAPER TRADING OMS                                   -->
+      <!-- ================================================================= -->
+      <section id="section-paper" class="section-container hidden space-y-5">
+        <div class="glass-panel rounded-3xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">Paper Trading Order Management System (OMS)</h3>
+              <p class="text-xs text-slate-400">Live order matching, trailing P&amp;L with accurate Indian statutory tax deductions (STT, GST, Stamp Duty).</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
+              <span class="text-xs font-mono text-slate-400">Total Net P&amp;L:</span>
+              <span id="paper-total-pnl" class="text-xl font-mono font-bold text-emerald-400">₹0.00</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead>
+                <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+                  <th class="py-2.5 px-3">Order ID</th>
+                  <th class="py-2.5 px-3">Symbol</th>
+                  <th class="py-2.5 px-3">Side</th>
+                  <th class="py-2.5 px-3">Qty</th>
+                  <th class="py-2.5 px-3">Entry Price</th>
+                  <th class="py-2.5 px-3">Current Price</th>
+                  <th class="py-2.5 px-3">Charges (STT/GST)</th>
+                  <th class="py-2.5 px-3">Net Realized P&amp;L</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="paper-orders-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 7: ⚙️ ANGEL ONE LIVE BROKER BRIDGE                        -->
+      <!-- ================================================================= -->
+      <section id="section-broker" class="section-container hidden space-y-5">
+        <div class="glass-panel rounded-3xl p-6 border border-slate-800 space-y-4 max-w-2xl">
           <div>
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              🤖 Kronos K-Line Simulation — <span id="kronos-detail-symbol" class="text-cyan-400">RELIANCE</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">shiyu-coder/Kronos</span>
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>Angel One SmartAPI 0-Delay Bridge</span>
+              <span id="broker-section-status-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                Disconnected
+              </span>
             </h3>
-            <p class="text-xs text-slate-400">Forward 5-candle autoregressive simulation with computed trade plan.</p>
+            <p class="text-xs text-slate-400 mt-1">
+              Connect your Angel One trading account for real-time tick streaming without any rate limits. Credentials stay strictly in volatile RAM.
+            </p>
           </div>
-          <div id="kronos-dir-badge" class="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40">SIMULATING</div>
-        </div>
 
-        <!-- Kronos Metrics -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
-          <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800">
-            <div class="text-[10px] text-slate-400">MOMENTUM DELTA</div>
-            <div id="kronos-delta-label" class="text-lg font-bold text-emerald-400">--</div>
-          </div>
-          <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800">
-            <div class="text-[10px] text-slate-400">CONFIDENCE</div>
-            <div id="kronos-conf-label" class="text-lg font-bold text-cyan-300">--</div>
-          </div>
-          <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800">
-            <div class="text-[10px] text-slate-400">PATH CONSISTENCY</div>
-            <div id="kronos-path-label" class="text-lg font-bold text-violet-300">--</div>
-          </div>
-          <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800">
-            <div class="text-[10px] text-slate-400">TRADE PLAN</div>
-            <div id="kronos-side-label" class="text-lg font-bold text-amber-400">--</div>
-          </div>
-        </div>
+          <div class="space-y-3 font-mono text-xs">
+            <div>
+              <label class="block text-slate-300 mb-1">Angel One Client Code</label>
+              <input id="broker-client-code" type="text" placeholder="e.g. S123456" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-slate-300 mb-1">Trading Password / MPIN</label>
+              <input id="broker-password" type="password" placeholder="Enter password or MPIN" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-slate-300 mb-1">TOTP Secret Key</label>
+              <input id="broker-totp-key" type="password" placeholder="Base32 TOTP Key from Google Authenticator" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-slate-300 mb-1">SmartAPI API Key</label>
+              <input id="broker-api-key" type="text" placeholder="API Key from SmartAPI Portal" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+            </div>
 
-        <!-- Trade Plan -->
-        <div class="grid grid-cols-4 gap-2 p-3 rounded-2xl bg-slate-950/80 border border-slate-800 font-mono text-xs text-center">
-          <div>
-            <div class="text-[10px] text-slate-400">ENTRY</div>
-            <div id="kronos-entry" class="font-bold text-white text-sm">--</div>
+            <button onclick="handleBrokerSectionConnect()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+              ⚡ Connect Angel One Live Feed →
+            </button>
           </div>
-          <div>
-            <div class="text-[10px] text-slate-400">STOP LOSS</div>
-            <div id="kronos-sl" class="font-bold text-rose-400 text-sm">--</div>
-          </div>
-          <div>
-            <div class="text-[10px] text-slate-400">TARGET 1</div>
-            <div id="kronos-t1" class="font-bold text-emerald-400 text-sm">--</div>
-          </div>
-          <div>
-            <div class="text-[10px] text-slate-400">TARGET 2</div>
-            <div id="kronos-t2" class="font-bold text-emerald-300 text-sm">--</div>
-          </div>
-        </div>
-
-        <!-- Projected Candles Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs font-mono">
-            <thead>
-              <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
-                <th class="py-2 px-3">Horizon</th>
-                <th class="py-2 px-3">Open</th>
-                <th class="py-2 px-3">High</th>
-                <th class="py-2 px-3">Low</th>
-                <th class="py-2 px-3">Close</th>
-                <th class="py-2 px-3">Volume</th>
-              </tr>
-            </thead>
-            <tbody id="kronos-candles-tbody"></tbody>
-          </table>
-        </div>
-
-        <!-- Mini Chart for Kronos Simulation -->
-        <div class="w-full h-56 rounded-2xl bg-slate-950 border border-slate-800 p-2 relative overflow-hidden">
-          <canvas id="kronos-chart-canvas" class="w-full h-full block"></canvas>
-        </div>
-      </section>
-
-      <!-- ================================================================= -->
-      <!-- SECTION 5: FULL 179 STOCK SCANNER TABLE                           -->
-      <!-- ================================================================= -->
-      <section class="glass-panel rounded-3xl p-5 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              📋 All 179 F&O Stocks — Live Scanner
-              <span id="scanner-total-count" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">179 Stocks</span>
-            </h3>
-            <p class="text-xs text-slate-400">9 & 15 EMA + VWAP filter • Click any stock for Kronos simulation</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <input id="scanner-search" type="text" placeholder="Search symbol..." class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-mono w-44" />
-            <select id="scanner-sort" class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-cyan-500">
-              <option value="alpha_score">Sort by Alpha Score</option>
-              <option value="change_pct">Sort by % Change</option>
-              <option value="ltp">Sort by Price</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Sector Filter -->
-        <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
-          <button onclick="filterBySector('ALL')" data-sector="ALL" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition">All F&O</button>
-          <button onclick="filterBySector('BANKING')" data-sector="BANKING" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Banking</button>
-          <button onclick="filterBySector('IT')" data-sector="IT" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">IT</button>
-          <button onclick="filterBySector('AUTO')" data-sector="AUTO" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Auto</button>
-          <button onclick="filterBySector('METALS')" data-sector="METALS" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Metals</button>
-          <button onclick="filterBySector('ENERGY')" data-sector="ENERGY" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Energy</button>
-          <button onclick="filterBySector('PHARMA')" data-sector="PHARMA" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Pharma</button>
-          <button onclick="filterBySector('POWER')" data-sector="POWER" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Power</button>
-          <button onclick="filterBySector('NBFC')" data-sector="NBFC" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">NBFC</button>
-          <button onclick="filterBySector('FMCG')" data-sector="FMCG" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">FMCG</button>
-        </div>
-
-        <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
-          <table class="w-full text-left border-collapse text-xs font-mono">
-            <thead class="sticky top-0 bg-slate-950/95 backdrop-blur-md z-10">
-              <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase tracking-wider">
-                <th class="py-3 px-3">Symbol & Sector</th>
-                <th class="py-3 px-3">LTP</th>
-                <th class="py-3 px-3">24h Change</th>
-                <th class="py-3 px-3 text-cyan-400">9 EMA</th>
-                <th class="py-3 px-3 text-violet-400">15 EMA</th>
-                <th class="py-3 px-3 text-amber-400">VWAP</th>
-                <th class="py-3 px-3">Signal</th>
-                <th class="py-3 px-3 text-amber-400">Alpha</th>
-                <th class="py-3 px-3">Kronos</th>
-                <th class="py-3 px-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody id="scanner-table-body" class="divide-y divide-slate-800/40"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ================================================================= -->
-      <!-- SECTION 6: PAPER TRADING OMS                                      -->
-      <!-- ================================================================= -->
-      <section class="glass-panel rounded-3xl p-5 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 class="text-base font-bold text-white">💼 Paper Trading OMS</h3>
-            <p class="text-xs text-slate-400">Live order matching with Indian statutory tax calculations.</p>
-          </div>
-          <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-            <span class="text-xs font-mono text-slate-400">Total P&L:</span>
-            <span id="paper-total-pnl" class="text-lg font-mono font-bold text-emerald-400">₹0.00</span>
-          </div>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs font-mono">
-            <thead>
-              <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
-                <th class="py-2.5 px-3">ID</th>
-                <th class="py-2.5 px-3">Symbol</th>
-                <th class="py-2.5 px-3">Side</th>
-                <th class="py-2.5 px-3">Qty</th>
-                <th class="py-2.5 px-3">Entry</th>
-                <th class="py-2.5 px-3">Current</th>
-                <th class="py-2.5 px-3">Charges</th>
-                <th class="py-2.5 px-3">Net P&L</th>
-                <th class="py-2.5 px-3">Status</th>
-                <th class="py-2.5 px-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody id="paper-orders-tbody"></tbody>
-          </table>
         </div>
       </section>
 
     </main>
 
+    <!-- Footer -->
     <footer class="border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500 font-mono">
-      AlphaPulse IN • 179 NSE F&O Universe • Kronos K-Line Engine • Live Market Feed
+      AlphaPulse IN • 179 NSE F&amp;O Universe • Kronos K-Line Foundation Model Engine • Zero-Delay Live Ticks
     </footer>
+
   </div>
 
   <!-- ===================================================================== -->
@@ -439,19 +677,36 @@
         </div>
         <button onclick="closeAngelModal()" class="text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
       </div>
-      <p class="text-xs text-slate-400">Enter credentials for 0-second delay live market tick streaming. All data stays in RAM.</p>
-      <div id="angel-connect-feedback" class="hidden p-3 rounded-xl text-xs font-mono border"></div>
+
+      <p class="text-xs text-slate-400">
+        Enter credentials for 0-second delay live market tick streaming. All tokens reside strictly in volatile RAM.
+      </p>
+
       <form onsubmit="handleAngelConnectSubmit(event)" class="space-y-3 font-mono text-xs">
-        <div><label class="block text-slate-300 mb-1">Client Code</label><input id="angel-client-code" type="text" required placeholder="e.g. S123456" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" /></div>
-        <div><label class="block text-slate-300 mb-1">Trading Password</label><input id="angel-password" type="password" required placeholder="Enter password" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" /></div>
-        <div><label class="block text-slate-300 mb-1">TOTP Secret Key</label><input id="angel-totp-key" type="password" required placeholder="Base32 key" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" /></div>
-        <div><label class="block text-slate-300 mb-1">SmartAPI API Key</label><input id="angel-api-key" type="text" required placeholder="API Key" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" /></div>
-        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20 transition cursor-pointer">Connect Live Feed →</button>
+        <div>
+          <label class="block text-slate-300 mb-1">Client Code</label>
+          <input id="angel-client-code" type="text" required placeholder="e.g. S123456" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Trading Password / MPIN</label>
+          <input id="angel-password" type="password" required placeholder="Enter password" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">TOTP Secret Key</label>
+          <input id="angel-totp-key" type="password" required placeholder="Base32 Key from Authenticator" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">SmartAPI API Key</label>
+          <input id="angel-api-key" type="text" required placeholder="API Key from portal" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white" />
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+          Connect Live Feed →
+        </button>
       </form>
     </div>
   </div>
 
-  <script src="js/live_chart.js"></script>
   <script src="js/ws_client.js"></script>
   <script src="js/app.js"></script>
 </body>
