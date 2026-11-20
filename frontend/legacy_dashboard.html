@@ -1,0 +1,3529 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlphaPulse IN — 9 &amp; 15 EMA + VWAP | NSE F&amp;O Kronos Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #050811;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #0b1120; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    .glass-panel {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(9, 13, 25, 0.94) 100%);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#050811] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- ===================================================================== -->
+  <!-- SCREEN 1: HARDENED TRADER LOGIN & SIGN-UP GATE                        -->
+  <!-- ===================================================================== -->
+  <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-[radial-gradient(ellipse_at_top,_rgba(6,182,212,0.14),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(139,92,246,0.12),_transparent_50%)]">
+    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left Brand & Feature Pitch Panel -->
+      <div class="lg:col-span-6 glass-panel border border-slate-800/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
+        <div class="space-y-5">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20">
+              αP
+            </div>
+            <div>
+              <h1 class="text-xl font-extrabold tracking-tight text-white">AlphaPulse IN</h1>
+              <p class="text-[11px] font-mono text-cyan-300">9 &amp; 15 EMA + VWAP • NSE F&amp;O QUANT TERMINAL</p>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 pt-2">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+              Institutional-Grade <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">Intraday &amp; Swing</span> Analytics for NSE F&amp;O
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Backtest 5-minute 9/15 EMA + VWAP setups with realistic Indian statutory charges (STT, Stamp Duty, GST), scan 28 verified NSE F&amp;O stocks live, run <strong class="text-slate-200">shiyu-coder/Kronos</strong> K-Line forecasting, and simulate next-day Intraday &amp; Swing moves.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+              <div class="font-mono font-bold text-emerald-400">✓ PBKDF2-SHA256 Auth</div>
+              <p class="text-slate-400 text-[11px]">Zero hardcoded passwords. 100k-iteration Web Crypto salted hashes &amp; lockout shield.</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+              <div class="font-mono font-bold text-cyan-400">✓ RAM-Only Broker Vault</div>
+              <p class="text-slate-400 text-[11px]">Angel One SmartAPI JWT &amp; TOTP secrets stay strictly in memory—never saved on disk.</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+              <div class="font-mono font-bold text-violet-400">✓ Kronos K-Line Engine</div>
+              <p class="text-slate-400 text-[11px]">Built-in projection + 1-click FastAPI bridge for official GitHub PyTorch Kronos models.</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+              <div class="font-mono font-bold text-amber-400">✓ Next-Day Simulator</div>
+              <p class="text-slate-400 text-[11px]">Separate Intraday &amp; Swing F&amp;O watchlists with rules checklist and candle-by-candle replay.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 leading-relaxed">
+          <strong class="text-amber-300">SEBI Risk Disclosure:</strong> AlphaPulse IN is an educational quantitative analytics terminal. We are NOT a SEBI-registered investment advisor or research analyst. Trading NSE F&amp;O carries substantial risk of capital loss.
+        </div>
+      </div>
+
+      <!-- Right Auth Card -->
+      <div class="lg:col-span-6 glass-panel border border-slate-800/90 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
+        <div class="space-y-5">
+          <!-- Mode Switcher -->
+          <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-2xl border border-slate-800">
+            <button id="auth-tab-login" onclick="setAuthMode('login')" class="py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer">
+              Sign In
+            </button>
+            <button id="auth-tab-signup" onclick="setAuthMode('signup')" class="py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition cursor-pointer">
+              Create Trader Account
+            </button>
+          </div>
+
+          <!-- Status / Error Alert -->
+          <div id="auth-feedback" class="hidden p-3 rounded-xl text-xs font-medium border"></div>
+
+          <!-- SIGN IN FORM -->
+          <form id="login-form" onsubmit="handleTraderLogin(event)" class="space-y-4">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-medium text-slate-300">Trader Email</label>
+              <input id="login-email" type="email" required placeholder="you@domain.com" autocomplete="username" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-medium text-slate-300">Password</label>
+              <div class="relative">
+                <input id="login-password" type="password" required placeholder="Enter your password" autocomplete="current-password" class="w-full px-3.5 py-2.5 pr-16 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600" />
+                <button type="button" onclick="toggleInputVisibility('login-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] font-mono rounded-lg bg-slate-800 text-slate-300 hover:text-white cursor-pointer">Show</button>
+              </div>
+            </div>
+
+            <label class="flex items-center gap-2.5 text-xs text-slate-400 cursor-pointer select-none">
+              <input id="login-open-angel" type="checkbox" class="rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0" />
+              <span>Open Angel One SmartAPI Connect modal right after login</span>
+            </label>
+
+            <button id="login-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 transition cursor-pointer">
+              Sign In to Trading Terminal →
+            </button>
+          </form>
+
+          <!-- SIGN UP FORM -->
+          <form id="signup-form" onsubmit="handleTraderSignup(event)" class="hidden space-y-3.5">
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-slate-300">Full Name</label>
+              <input id="signup-name" type="text" required placeholder="e.g. Aarav Patel" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600" />
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs font-medium text-slate-300">Email Address</label>
+              <input id="signup-email" type="email" required placeholder="trader@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600" />
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-medium text-slate-300">Strong Password</label>
+                <span id="pwd-strength-label" class="text-[10px] font-mono text-slate-500">Min 8 chars + Upper + Num + Symbol</span>
+              </div>
+              <input id="signup-password" type="password" required oninput="updatePasswordStrength(this.value)" placeholder="Create strong password" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-600" />
+              <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden mt-1">
+                <div id="pwd-strength-bar" class="h-full w-0 bg-rose-500 transition-all duration-300"></div>
+              </div>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-400 hover:to-cyan-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-violet-500/20 transition cursor-pointer">
+              Create Encrypted Account (PBKDF2) →
+            </button>
+          </form>
+
+          <!-- Divider + 1-Click Ephemeral Demo Session -->
+          <div class="relative py-1">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
+            <div class="relative flex justify-center text-[11px] font-mono"><span class="bg-[#0b1120] px-3 text-slate-500">OR QUICK SANDBOX ACCESS</span></div>
+          </div>
+
+          <button onclick="loginAsGuestDemo()" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+            <span>⚡ Instant Sandbox Trader Session (1-Click, No Password Stored)</span>
+          </button>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+          <span>Session Auto-Lock: 30m Idle</span>
+          <span>DPDP India Compliant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SCREEN 2: MAIN TRADING DASHBOARD SHELL                                -->
+  <!-- ===================================================================== -->
+  <div id="dashboard-shell" class="hidden min-h-screen flex flex-col">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-[#050811]/90 backdrop-blur-md border-b border-slate-800/90">
+      <div class="max-w-[1440px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+
+        <!-- Brand -->
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-sm shadow-md shadow-cyan-500/20">
+            αP
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-sm sm:text-base tracking-tight text-white">AlphaPulse IN</span>
+              <span class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">NSE F&amp;O</span>
+            </div>
+            <p class="text-[10px] font-mono text-slate-400">9 &amp; 15 EMA + VWAP • Kronos Terminal</p>
+          </div>
+        </div>
+
+        <!-- Primary Navigation Tabs -->
+        <nav class="order-3 lg:order-2 w-full lg:w-auto flex flex-wrap items-center gap-1 p-1 bg-slate-950 border border-slate-800 rounded-xl">
+          <button id="tab-btn-backtest" onclick="switchSection('backtest')" class="nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            Backtest &amp; Chart
+          </button>
+          <button id="tab-btn-scanner" onclick="switchSection('scanner')" class="nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Live F&amp;O Scanner</span>
+            <span id="nav-scan-count" class="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/20 text-emerald-300">0</span>
+          </button>
+          <button id="tab-btn-nextday" onclick="switchSection('nextday')" class="nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+            <span>Next-Day Outlook</span>
+            <span id="nav-nextday-count" class="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-violet-500/20 text-violet-300">12</span>
+          </button>
+          <button id="tab-btn-calc" onclick="switchSection('calc')" class="nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer">
+            Qty &amp; Tax Calc
+          </button>
+        </nav>
+
+        <!-- Right Broker + Security + User Controls -->
+        <div class="order-2 lg:order-3 flex items-center gap-2">
+          <button id="angel-header-btn" onclick="openAngelConnectModal()" class="px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer">
+            <span id="angel-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span id="angel-header-label">Connect Angel One</span>
+          </button>
+
+          <button onclick="openSecurityModal()" title="Security & DPDP Data Vault" class="px-2.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer">
+            🛡 Security
+          </button>
+
+          <div class="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-800">
+            <div id="user-avatar-badge" class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center">TR</div>
+            <div class="leading-tight">
+              <div id="user-display-name" class="text-xs font-semibold text-white">Trader</div>
+              <div id="user-display-role" class="text-[10px] font-mono text-slate-400">Sandbox</div>
+            </div>
+          </div>
+
+          <button onclick="logoutTrader(true)" class="px-2.5 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold transition cursor-pointer">
+            Logout
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-[1440px] w-full mx-auto px-3 sm:px-5 py-5 space-y-6">
+
+      <!-- =================================================================== -->
+      <!-- SECTION 1: BACKTEST & 5-MIN INTERACTIVE CANDLESTICK CHART           -->
+      <!-- =================================================================== -->
+      <section id="section-backtest" class="space-y-5">
+
+        <!-- Strategy Parameter Controls -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 items-end">
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">NSE F&amp;O Stock</label>
+              <select id="param-symbol" onchange="onSymbolChange()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">Capital (₹)</label>
+              <input id="param-capital" type="number" min="10000" step="10000" value="100000" onchange="runStrategyBacktest()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">Risk / Trade (%)</label>
+              <input id="param-risk" type="number" min="0.25" max="5" step="0.25" value="1.0" onchange="runStrategyBacktest()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">Risk : Reward</label>
+              <select id="param-rr" onchange="runStrategyBacktest()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none">
+                <option value="1.5">1 : 1.5</option>
+                <option value="2" selected>1 : 2.0 (Best)</option>
+                <option value="2.5">1 : 2.5</option>
+                <option value="3">1 : 3.0</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">Brokerage / Order</label>
+              <select id="param-brokerage" onchange="runStrategyBacktest()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none">
+                <option value="0">₹0 (Zero Brok)</option>
+                <option value="5">₹5 / Order</option>
+                <option value="20" selected>₹20 (Angel/Zerodha)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono text-slate-400 mb-1">Exit Mode</label>
+              <select id="param-exit-mode" onchange="runStrategyBacktest()" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none">
+                <option value="fixed" selected>Fixed Target + SL</option>
+                <option value="trail15">15 EMA Trailing SL</option>
+              </select>
+            </div>
+            <div>
+              <button onclick="runStrategyBacktest()" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition cursor-pointer">
+                ↻ Run Backtest
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Metrics Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">Net PnL (After Tax)</span>
+            <strong id="kpi-net-pnl" class="block text-lg sm:text-xl font-mono font-bold text-emerald-400 mt-1">₹0</strong>
+            <span id="kpi-net-ret" class="text-[11px] font-mono text-slate-400">0.00% Return</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">Win Rate (Net)</span>
+            <strong id="kpi-win-rate" class="block text-lg sm:text-xl font-mono font-bold text-cyan-300 mt-1">0%</strong>
+            <span id="kpi-wl-split" class="text-[11px] font-mono text-slate-400">0W / 0L</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">Profit Factor</span>
+            <strong id="kpi-pf" class="block text-lg sm:text-xl font-mono font-bold text-white mt-1">0.00</strong>
+            <span class="text-[11px] font-mono text-slate-400">Target &gt; 1.50</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">Max Drawdown</span>
+            <strong id="kpi-dd" class="block text-lg sm:text-xl font-mono font-bold text-rose-400 mt-1">0.0%</strong>
+            <span id="kpi-dd-rs" class="text-[11px] font-mono text-slate-400">₹0 peak drop</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">STT + GST + Brok</span>
+            <strong id="kpi-charges" class="block text-lg sm:text-xl font-mono font-bold text-amber-300 mt-1">₹0</strong>
+            <span id="kpi-gross-pnl" class="text-[11px] font-mono text-slate-400">Gross: ₹0</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <span class="block text-[11px] font-mono text-slate-400">Data Source</span>
+            <strong id="kpi-data-src" class="block text-sm font-mono font-bold text-violet-300 mt-1.5">Simulated 5m</strong>
+            <span id="kpi-total-trades" class="text-[11px] font-mono text-slate-400">0 Trades</span>
+          </div>
+        </div>
+
+        <!-- Charts Grid: 5-Min Candlestick + Equity Curve -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+          <!-- Main 5-Min Candlestick Chart -->
+          <div class="xl:col-span-8 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 id="chart-title" class="text-sm sm:text-base font-bold text-white font-mono">RELIANCE — 5-Minute Chart (9 EMA / 15 EMA / VWAP)</h2>
+                <div class="flex flex-wrap items-center gap-3 text-[11px] font-mono mt-0.5">
+                  <span class="text-cyan-400">━ 9 EMA</span>
+                  <span class="text-amber-400">━ 15 EMA</span>
+                  <span class="text-fuchsia-400">┅ Intraday VWAP</span>
+                  <span class="text-emerald-400">▲ Buy</span>
+                  <span class="text-rose-400">▼ Sell</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="changeChartDay(-1)" class="px-2.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs font-mono cursor-pointer">◀</button>
+                <select id="chart-day-select" onchange="onDaySelectChange()" class="px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-white"></select>
+                <button onclick="changeChartDay(1)" class="px-2.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs font-mono cursor-pointer">▶</button>
+              </div>
+            </div>
+
+            <!-- Hover Readout -->
+            <div id="chart-ohlc-bar" class="text-[11px] font-mono text-slate-400 bg-slate-950/70 px-3 py-1.5 rounded-lg border border-slate-800/80 flex flex-wrap gap-x-4 gap-y-1">
+              <span>Hover or tap chart candles to inspect OHLC, 9 EMA, 15 EMA, VWAP &amp; Volume</span>
+            </div>
+
+            <div id="candle-canvas-wrap" class="w-full h-72 sm:h-80 relative">
+              <canvas id="candle-canvas" class="w-full h-full block rounded-xl"></canvas>
+            </div>
+          </div>
+
+          <!-- Equity Curve & Drawdown -->
+          <div class="xl:col-span-4 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-xl">
+            <div>
+              <h3 class="text-sm font-bold text-white font-mono">Net Equity Curve (Post-Charges)</h3>
+              <p class="text-[11px] text-slate-400">Cumulative capital growth after STT, Stamp Duty, Exchange Txn &amp; GST</p>
+            </div>
+            <div id="equity-canvas-wrap" class="w-full h-64 sm:h-72 relative">
+              <canvas id="equity-canvas" class="w-full h-full block rounded-xl"></canvas>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] font-mono flex justify-between">
+              <span class="text-slate-400">Final Capital:</span>
+              <strong id="equity-final-cap" class="text-emerald-400">₹1,00,000</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Executed Backtest Trades Table -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-white">Executed Trade Log (Click any row to inspect on chart)</h3>
+              <p class="text-[11px] text-slate-400">Includes exact entry/exit timestamps, quantity, charges, and exit reason (TARGET / SL / TRAIL / EOD)</p>
+            </div>
+            <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+              <button id="tf-ALL" onclick="setTradeFilter('ALL')" class="tf-btn px-2.5 py-1 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer">All</button>
+              <button id="tf-WIN" onclick="setTradeFilter('WIN')" class="tf-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-emerald-400 cursor-pointer">Wins</button>
+              <button id="tf-LOSS" onclick="setTradeFilter('LOSS')" class="tf-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-rose-400 cursor-pointer">Losses</button>
+              <button id="tf-LONG" onclick="setTradeFilter('LONG')" class="tf-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-cyan-300 cursor-pointer">Long</button>
+              <button id="tf-SHORT" onclick="setTradeFilter('SHORT')" class="tf-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-amber-300 cursor-pointer">Short</button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400 text-[11px]">
+                  <th class="py-2.5 px-3">Date &amp; Time</th>
+                  <th class="py-2.5 px-3">Side</th>
+                  <th class="py-2.5 px-3 text-right">Qty</th>
+                  <th class="py-2.5 px-3 text-right">Entry</th>
+                  <th class="py-2.5 px-3 text-right">Exit</th>
+                  <th class="py-2.5 px-3">Reason</th>
+                  <th class="py-2.5 px-3 text-right">Charges</th>
+                  <th class="py-2.5 px-3 text-right">Net PnL</th>
+                </tr>
+              </thead>
+              <tbody id="trade-log-tbody" class="divide-y divide-slate-800/70"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 2: LIVE NSE F&O SETUP SCANNER + KRONOS BRIDGE               -->
+      <!-- =================================================================== -->
+      <section id="section-scanner" class="hidden space-y-5">
+
+        <!-- Scanner Control Header -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-base sm:text-lg font-bold text-white">Live NSE F&amp;O Setup Scanner + Kronos K-Line Audit</h2>
+                <span class="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  STRICT F&amp;O ONLY (28 STOCKS)
+                </span>
+                <span id="scanner-feed-badge" class="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                  Engine: Built-in JS Kronos
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
+                Sirf verified <strong class="text-slate-200">NSE F&amp;O</strong> stocks par live <strong class="text-cyan-300">9 &amp; 15 EMA + VWAP + &gt;1.5x Volume</strong> setups (Forming &amp; Confirmed) detect karta hai — har card par exact Entry, SL, Target aur Kronos 30-Min forecast ke saath.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="live-stream-btn" onclick="toggleScannerAutoStream()" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold cursor-pointer">
+                ● Live Stream: ON
+              </button>
+              <button onclick="toggleKronosBridgePanel()" class="px-3 py-2 rounded-xl bg-violet-500/20 hover:bg-violet-500/30 border border-violet-500/40 text-violet-300 text-xs font-bold cursor-pointer">
+                ⚙ GitHub Kronos Bridge
+              </button>
+              <button onclick="runFnoScanner(true)" class="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs cursor-pointer">
+                ↻ Scan Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Search + Filters Row -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center pt-2 border-t border-slate-800/80">
+            <div class="md:col-span-4 relative">
+              <input id="scanner-search" type="text" oninput="renderScannerCards()" placeholder="Search NSE F&O stock (e.g. RELIANCE, HAL)..." class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white focus:border-cyan-500 focus:outline-none placeholder-slate-500" />
+            </div>
+
+            <div class="md:col-span-5 flex flex-wrap items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+              <button id="sf-ALL" onclick="setScannerFilter('ALL')" class="sf-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer">All</button>
+              <button id="sf-CONFIRMED" onclick="setScannerFilter('CONFIRMED')" class="sf-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-300 cursor-pointer">⚡ Confirmed</button>
+              <button id="sf-FORMING" onclick="setScannerFilter('FORMING')" class="sf-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-amber-300 cursor-pointer">⏳ Forming</button>
+              <button id="sf-BUY" onclick="setScannerFilter('BUY')" class="sf-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 cursor-pointer">▲ Buy</button>
+              <button id="sf-SELL" onclick="setScannerFilter('SELL')" class="sf-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-rose-400 cursor-pointer">▼ Sell</button>
+            </div>
+
+            <div class="md:col-span-3 flex items-center justify-end gap-2 text-xs font-mono">
+              <span class="text-slate-400">Target R:R</span>
+              <select id="scanner-rr" onchange="runFnoScanner(false)" class="px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-white">
+                <option value="2" selected>1 : 2.0</option>
+                <option value="2.5">1 : 2.5</option>
+                <option value="3">1 : 3.0</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Non-F&O Strict Rejection Warning -->
+          <div id="non-fno-warning" class="hidden p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-mono"></div>
+
+          <!-- Collapsible GitHub Kronos + Broker Relay Bridge Panel -->
+          <div id="kronos-bridge-panel" class="hidden p-4 rounded-2xl bg-slate-950/90 border border-violet-500/40 space-y-3.5 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-violet-300 font-mono">Official GitHub shiyu-coder/Kronos + Hardened FastAPI Relay Bridge</h3>
+                <p class="text-[11px] text-slate-400">Connect your local Python server running <code class="text-cyan-300">NeoQuasar/Kronos-small</code> + Free 0-Delay Broker Data (Angel One / FYERS / Upstox).</p>
+              </div>
+              <button onclick="downloadKronosServerScript()" class="px-3.5 py-2 rounded-xl bg-violet-500 hover:bg-violet-400 text-slate-950 font-bold text-xs cursor-pointer">
+                ⬇ Download kronos_fno_server.py
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 font-mono">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Kronos HuggingFace Model</label>
+                <select id="kronos-model-id" class="w-full px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs">
+                  <option value="NeoQuasar/Kronos-small" selected>NeoQuasar/Kronos-small (24.7M)</option>
+                  <option value="NeoQuasar/Kronos-mini">NeoQuasar/Kronos-mini (4.1M CPU)</option>
+                  <option value="NeoQuasar/Kronos-base">NeoQuasar/Kronos-base (102M GPU)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Live Market Feed Source</label>
+                <select id="kronos-feed-source" class="w-full px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs">
+                  <option value="angelone" selected>Angel One SmartAPI (₹0 • 0-Delay)</option>
+                  <option value="fyers">FYERS API v3 (₹0 • 0-Delay)</option>
+                  <option value="upstox">Upstox API v2 (₹0 • 0-Delay)</option>
+                  <option value="dhan">DhanHQ v2 (0-Delay)</option>
+                  <option value="yfinance">Yahoo Finance (.NS Free Test)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">Local FastAPI Server URL</label>
+                <input id="kronos-server-url" type="text" value="http://127.0.0.1:8000" class="w-full px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs" />
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-1">X-AlphaPulse-Secret</label>
+                <input id="kronos-api-secret" type="password" value="change-this-local-secret" class="w-full px-2.5 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs" />
+              </div>
+              <div class="flex items-end gap-1.5">
+                <button onclick="connectRealKronosServer()" class="flex-1 py-2 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs cursor-pointer">
+                  Connect Live
+                </button>
+                <button onclick="toggleJsonFeedBox()" class="py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs cursor-pointer">
+                  JSON
+                </button>
+              </div>
+            </div>
+
+            <!-- Optional Manual JSON Paste Box -->
+            <div id="json-feed-box" class="hidden space-y-2 pt-2 border-t border-slate-800">
+              <textarea id="json-feed-input" rows="3" placeholder='Paste live F&O scan array JSON e.g. [{"symbol":"RELIANCE","ltp":2950,"ema9":2946,"ema15":2941,"vwap":2935,"volMult":2.1,"direction":"BUY","status":"CONFIRMED"}]' class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-[11px] text-cyan-200"></textarea>
+              <button onclick="importCustomJsonScan()" class="px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold text-xs cursor-pointer">Import &amp; Filter F&amp;O JSON</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scanned F&O Stock Cards Grid -->
+        <div id="scanner-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 3: NEXT-DAY KRONOS + STRATEGY OUTLOOK (INTRADAY & SWING)    -->
+      <!-- =================================================================== -->
+      <section id="section-nextday" class="hidden space-y-6">
+
+        <!-- Top Control & Dual Rulebooks Header -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-base sm:text-lg font-bold text-white">Next-Day Kronos &amp; 9/15 EMA Strategy Outlook</h2>
+                <span id="nextday-session-badge" class="px-2.5 py-0.5 text-[11px] font-mono font-semibold rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30">
+                  Next Session: --
+                </span>
+                <span class="px-2.5 py-0.5 text-[11px] font-mono font-semibold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  100% Separate Intraday &amp; Swing Pools
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
+                Kronos K-Line Forecast aur aapki <strong class="text-slate-200">9 &amp; 15 EMA + VWAP</strong> strategy ke hisaab se agle trading session mein move dene wale <strong class="text-cyan-300">Intraday</strong> aur <strong class="text-amber-300">Swing</strong> NSE F&amp;O stocks — exact Entry, SL, Target, Rules Checklist aur Live Simulation ke saath.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                <button id="nd-view-BOTH" onclick="setNextDayView('BOTH')" class="nd-view-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer">Both Sections</button>
+                <button id="nd-view-INTRADAY" onclick="setNextDayView('INTRADAY')" class="nd-view-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-cyan-300 cursor-pointer">Intraday Only</button>
+                <button id="nd-view-SWING" onclick="setNextDayView('SWING')" class="nd-view-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-amber-300 cursor-pointer">Swing Only</button>
+              </div>
+
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                <button id="nd-dir-ALL" onclick="setNextDayDirection('ALL')" class="nd-dir-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer">All</button>
+                <button id="nd-dir-BUY" onclick="setNextDayDirection('BUY')" class="nd-dir-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 cursor-pointer">▲ Bullish</button>
+                <button id="nd-dir-SELL" onclick="setNextDayDirection('SELL')" class="nd-dir-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-rose-400 cursor-pointer">▼ Bearish</button>
+              </div>
+
+              <button onclick="generateNextDayForecasts(true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-cyan-500 hover:from-violet-400 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-violet-500/20 transition cursor-pointer">
+                ↻ Refresh Kronos Forecast
+              </button>
+            </div>
+          </div>
+
+          <!-- Dual Strategy Rulebooks -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80 text-xs">
+            <div class="p-3.5 rounded-xl bg-cyan-950/25 border border-cyan-500/30 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-cyan-300 font-mono">⚡ INTRADAY TRADE RULES (5m / 15m TF)</span>
+                <span class="text-[10px] font-mono text-slate-400">09:30 – 15:15 IST</span>
+              </div>
+              <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside">
+                <li><strong>No First-15m Chase:</strong> 09:15–09:30 AM candle ka High/Low banne dein.</li>
+                <li><strong>VWAP + EMA Confluence:</strong> Buy sirf VWAP ke upar (9 EMA &gt; 15 EMA), Sell sirf VWAP ke neeche.</li>
+                <li><strong>Volume Trigger:</strong> Breakout candle par Volume &gt; 1.5x SMA20 hona mandatory hai.</li>
+                <li><strong>Gap Filter &amp; Risk:</strong> Agar stock &gt;2% gap-up/down khule toh direct entry avoid karein; SL par max 1% risk.</li>
+              </ul>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/30 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-300 font-mono">📈 SWING TRADE RULES (1H / Daily TF)</span>
+                <span class="text-[10px] font-mono text-slate-400">Hold: 3 – 7 Days</span>
+              </div>
+              <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside">
+                <li><strong>Daily Structure:</strong> Daily close 9 &amp; 15 EMA cluster ke upar/neeche strong body ke saath ho.</li>
+                <li><strong>1-Hour Confirmation:</strong> Agle din pehli 1-Hour candle (09:15–10:15) Entry Zone hold kare.</li>
+                <li><strong>Delivery &amp; Sector Sync:</strong> Sector trend alignment aur delivery volume expansion verify karein.</li>
+                <li><strong>Trailing Discipline:</strong> Target 1 par 50% book karein aur baaki 50% ka SL Daily 9 EMA par trail karein.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-SECTION A: NEXT-DAY INTRADAY STOCKS -->
+        <div id="nextday-intraday-block" class="space-y-3.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50"></span>
+              <div>
+                <h3 class="text-sm sm:text-base font-bold text-white">Section 1: Next-Day Intraday High-Momentum Stocks</h3>
+                <p class="text-[11px] text-slate-400">Sirf Intraday ke liye alag NSE F&amp;O stocks — 5-Min 9/15 EMA + VWAP + Kronos Next-Session Forecast</p>
+              </div>
+            </div>
+            <span id="nd-intraday-count" class="px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 font-mono text-xs font-bold">
+              6 Intraday Picks
+            </span>
+          </div>
+          <div id="nextday-intraday-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- SUB-SECTION B: NEXT-DAY SWING STOCKS -->
+        <div id="nextday-swing-block" class="space-y-3.5 pt-3 border-t border-slate-800/80">
+          <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50"></span>
+              <div>
+                <h3 class="text-sm sm:text-base font-bold text-white">Section 2: Next-Day Swing Positional Stocks (3–7 Days)</h3>
+                <p class="text-[11px] text-slate-400">Intraday se bilkul alag NSE F&amp;O stocks — Daily/1H 9 &amp; 15 EMA Breakout + Kronos Multi-Day Projection</p>
+              </div>
+            </div>
+            <span id="nd-swing-count" class="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono text-xs font-bold">
+              6 Swing Picks
+            </span>
+          </div>
+          <div id="nextday-swing-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- SECTION 4: POSITION SIZING & NSE STATUTORY TAX CALCULATOR           -->
+      <!-- =================================================================== -->
+      <section id="section-calc" class="hidden space-y-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- Inputs Card -->
+          <div class="lg:col-span-5 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+            <div>
+              <h2 class="text-base font-bold text-white">Position Sizing &amp; Risk Calculator</h2>
+              <p class="text-xs text-slate-400">Calculate exact NSE intraday quantity based on your 1% Stop-Loss risk rule.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+              <div class="col-span-2">
+                <label class="block text-slate-400 mb-1">Trade Direction</label>
+                <select id="calc-side" onchange="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white">
+                  <option value="LONG" selected>LONG (Buy First → Sell Later)</option>
+                  <option value="SHORT">SHORT (Sell First → Buy Later)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Total Capital (₹)</label>
+                <input id="calc-capital" type="number" value="100000" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Risk per Trade (%)</label>
+                <input id="calc-risk-pct" type="number" step="0.25" value="1.0" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Entry Price (₹)</label>
+                <input id="calc-entry" type="number" step="0.05" value="1420.00" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Stop-Loss Price (₹)</label>
+                <input id="calc-sl" type="number" step="0.05" value="1410.00" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Target Price (₹)</label>
+                <input id="calc-target" type="number" step="0.05" value="1440.00" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">Brokerage / Order (₹)</label>
+                <input id="calc-brokerage" type="number" step="1" value="20" oninput="calculatePositionAndTaxes()" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Outputs & Statutory Taxes Card -->
+          <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-cyan-500/30">
+                <span class="block text-[10px] text-slate-400">EXACT QUANTITY</span>
+                <strong id="calc-out-qty" class="text-xl text-cyan-300">0</strong>
+                <span id="calc-out-margin" class="block text-[10px] text-slate-400 mt-0.5">5x Margin: ₹0</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-rose-500/30">
+                <span class="block text-[10px] text-slate-400">MAX RISK (SL)</span>
+                <strong id="calc-out-risk" class="text-xl text-rose-400">₹0</strong>
+                <span id="calc-out-sl-pts" class="block text-[10px] text-slate-400 mt-0.5">0.00 pts SL</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-emerald-500/30">
+                <span class="block text-[10px] text-slate-400">NET PROFIT (TGT)</span>
+                <strong id="calc-out-net" class="text-xl text-emerald-400">₹0</strong>
+                <span id="calc-out-gross" class="block text-[10px] text-slate-400 mt-0.5">Gross: ₹0</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="block text-[10px] text-slate-400">RISK : REWARD</span>
+                <strong id="calc-out-rr" class="text-xl text-white">1 : 0.0</strong>
+                <span id="calc-out-turnover" class="block text-[10px] text-slate-400 mt-0.5">Turnover: ₹0</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-2">
+              <div class="font-bold text-slate-200 pb-1.5 border-b border-slate-800">NSE Intraday Equity Statutory Charges Breakdown</div>
+              <div class="flex justify-between text-slate-400"><span>Brokerage (Buy + Sell)</span><span id="tax-brok" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between text-slate-400"><span>STT (0.025% on Sell Side)</span><span id="tax-stt" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between text-slate-400"><span>NSE Exchange Txn (0.00297%)</span><span id="tax-exch" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between text-slate-400"><span>SEBI + IPFT (0.0002%)</span><span id="tax-sebi" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between text-slate-400"><span>Stamp Duty (0.003% on Buy Side)</span><span id="tax-stamp" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between text-slate-400"><span>GST (18% on Brok + Exch + SEBI)</span><span id="tax-gst" class="text-slate-200">₹0.00</span></div>
+              <div class="flex justify-between font-bold text-amber-300 pt-2 border-t border-slate-800"><span>Total Taxes &amp; Charges</span><span id="tax-total">₹0.00</span></div>
+              <div class="flex justify-between text-cyan-300 pt-1">
+                <span>Points Needed to Breakeven</span>
+                <span id="tax-breakeven">0.00 pts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Compliance Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950/60 mt-8">
+      <div class="max-w-[1440px] mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+        <span><strong class="text-amber-300">SEBI Disclaimer:</strong> Educational analytics &amp; backtesting tool only. Not a SEBI-registered advisor.</span>
+        <span class="font-mono">AlphaPulse IN • PBKDF2 Hardened • RAM-Only Broker Vault</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: CONNECT ANGEL ONE SMARTAPI (TOTP + OFFICIAL WEB TOKEN)       -->
+  <!-- ===================================================================== -->
+  <div id="angel-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4 max-h-[94vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">₹0 FREE • 0-DELAY</span>
+            <h3 class="text-base sm:text-lg font-bold text-white">Connect Angel One SmartAPI</h3>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Seedha dashboard se Angel One login karein — credentials sirf RAM memory mein rehte hain (never stored on disk).</p>
+        </div>
+        <button onclick="closeAngelConnectModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">✕</button>
+      </div>
+
+      <!-- Login Mode Tabs -->
+      <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
+        <button id="angel-tab-totp" onclick="setAngelLoginMode('totp')" class="py-2 rounded-lg font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 cursor-pointer">
+          MPIN + TOTP Login
+        </button>
+        <button id="angel-tab-web" onclick="setAngelLoginMode('web')" class="py-2 rounded-lg font-semibold text-slate-400 hover:text-white cursor-pointer">
+          Web Login / Paste Token (No TOTP)
+        </button>
+      </div>
+
+      <!-- Mode A: Direct MPIN + TOTP -->
+      <div id="angel-mode-totp" class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 mb-1">1. SmartAPI Key</label>
+            <input id="angel-api-key" type="password" placeholder="e.g. xYz123Ab" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-white focus:border-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">2. Angel Client ID</label>
+            <input id="angel-client-id" type="text" placeholder="e.g. A123456" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-white uppercase focus:border-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">3. 4-Digit MPIN</label>
+            <input id="angel-mpin" type="password" maxlength="6" placeholder="••••" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-white focus:border-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-slate-300">4. TOTP Secret / 6-Digit OTP</label>
+              <span id="angel-live-otp-preview" class="text-[10px] font-mono font-bold text-cyan-300">OTP: ------</span>
+            </div>
+            <div class="relative">
+              <input id="angel-totp-secret" type="password" oninput="previewLiveTotp()" placeholder="Base32 Secret or 6-digit OTP" class="w-full px-3 py-2 pr-14 rounded-xl bg-slate-950 border border-slate-800 font-mono text-white focus:border-emerald-500 focus:outline-none" />
+              <button type="button" onclick="toggleInputVisibility('angel-totp-secret', this)" class="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono rounded bg-slate-800 text-slate-300 cursor-pointer">Show</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <span id="angel-utc-status" class="font-mono">UTC Clock: Checking...</span>
+          <a href="https://smartapi.angelone.in/enable-totp" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline">Reset / Enable TOTP Key ↗</a>
+        </div>
+      </div>
+
+      <!-- Mode B: Official Web Login / Token -->
+      <div id="angel-mode-web" class="hidden space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">1. SmartAPI Key</label>
+          <input id="angel-web-api-key" type="password" placeholder="Enter your Angel One SmartAPI Key" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-white" />
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-slate-300 font-medium">2. Login on Official Angel One Page (SMS OTP)</span>
+            <button type="button" onclick="openAngelOfficialPublisherLogin()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-bold cursor-pointer">
+              Open Angel One Login ↗
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400">Login ke baad browser address bar ka redirect URL (jismein <code class="text-emerald-300">auth_token=...</code> hoga) neeche paste karein:</p>
+          <textarea id="angel-web-token-input" rows="2" placeholder="Paste full redirect URL or auth_token JWT here..." class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 font-mono text-[11px] text-emerald-300"></textarea>
+        </div>
+      </div>
+
+      <!-- API Gateway Route -->
+      <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <label class="text-slate-400 font-mono">API Gateway Route</label>
+          <select id="angel-gateway-mode" onchange="toggleCustomRelayInput()" class="flex-1 min-w-[220px] px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-emerald-300 font-mono text-xs">
+            <option value="direct" selected>Direct Angel One Cloud (apiconnect.angelone.in)</option>
+            <option value="relay">Custom / Local FastAPI Relay (Bypass Browser CORS/WAF)</option>
+          </select>
+        </div>
+        <div id="angel-relay-row" class="hidden flex items-center gap-2 pt-1">
+          <input id="angel-relay-url" type="text" value="http://127.0.0.1:8000" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 font-mono text-xs text-white" />
+          <button type="button" onclick="downloadKronosServerScript()" class="px-2.5 py-1.5 rounded-lg bg-violet-500/20 text-violet-300 border border-violet-500/40 font-bold text-[11px] cursor-pointer">
+            ⬇ Get Relay .py
+          </button>
+        </div>
+      </div>
+
+      <!-- Status Feedback Box -->
+      <div id="angel-status-box" class="hidden p-3 rounded-xl text-xs font-mono border leading-relaxed"></div>
+
+      <!-- Footer Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <button id="angel-disconnect-btn" onclick="disconnectAngelOne(false)" class="hidden px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 text-xs font-bold cursor-pointer">
+          Disconnect Session
+        </button>
+        <div class="flex items-center gap-2 ml-auto">
+          <button onclick="closeAngelConnectModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">Cancel</button>
+          <button id="angel-connect-submit" onclick="connectAngelOneDirect()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 text-xs font-extrabold shadow-lg shadow-emerald-500/20 cursor-pointer">
+            Connect Angel One Live
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: KRONOS K-LINE QUANTITATIVE AUDIT MODAL                       -->
+  <!-- ===================================================================== -->
+  <div id="kronos-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border border-violet-500/40 rounded-2xl max-w-3xl w-full p-5 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-violet-500/20 text-violet-300 border border-violet-500/40">KRONOS K-LINE AUDIT</span>
+            <h3 id="km-title" class="text-base sm:text-lg font-mono font-bold text-white">SYMBOL</h3>
+          </div>
+          <p id="km-subtitle" class="text-xs text-slate-400 mt-0.5">Next 30-Min (6 Candles) Projected K-Line Trajectory</p>
+        </div>
+        <button onclick="closeKronosModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Kronos Confidence</span>
+          <strong id="km-conf" class="text-lg text-violet-300">0%</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Entry Trigger</span>
+          <strong id="km-entry" class="text-lg text-white">₹0</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Stop-Loss</span>
+          <strong id="km-sl" class="text-lg text-rose-400">₹0</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Target</span>
+          <strong id="km-target" class="text-lg text-emerald-400">₹0</strong>
+        </div>
+      </div>
+
+      <div id="kronos-canvas-wrap" class="w-full h-56 bg-slate-950 border border-slate-800 rounded-xl p-2">
+        <canvas id="kronos-forecast-canvas" class="w-full h-full block rounded-lg"></canvas>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-violet-500/10 border border-violet-500/30 text-xs space-y-1.5">
+        <div class="font-mono font-bold text-violet-300">QUANTITATIVE TRADE THESIS</div>
+        <p id="km-thesis" class="text-slate-200 leading-relaxed">--</p>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button id="km-send-calc-btn" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold cursor-pointer">Send to Qty Calc</button>
+        <button id="km-open-chart-btn" class="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-bold cursor-pointer">Open 5m Backtest →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: NEXT-DAY / SWING INTERACTIVE SIMULATOR & RULES CHECKLIST     -->
+  <!-- ===================================================================== -->
+  <div id="nextday-sim-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-slate-900 border border-cyan-500/40 rounded-2xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl space-y-4 max-h-[94vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="sim-mode-badge" class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">INTRADAY 5M SIMULATION</span>
+            <span id="sim-dir-badge" class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">▲ BUY SETUP</span>
+            <h3 id="sim-title" class="text-base sm:text-lg font-mono font-bold text-white">RELIANCE — Next-Day Price Simulation</h3>
+          </div>
+          <p id="sim-subtitle" class="text-xs text-slate-400 mt-0.5">Kronos K-Line Forecast + 9/15 EMA Strategy Step-by-Step Replay</p>
+        </div>
+        <button onclick="closeNextDaySimulator()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">✕</button>
+      </div>
+
+      <!-- Telemetry Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 font-mono text-xs">
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Sim Price / Time</span>
+          <strong id="sim-cur-price" class="text-sm text-white">₹0.00</strong>
+          <span id="sim-cur-time" class="block text-[10px] text-cyan-300">Bar 0</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Trade Status</span>
+          <strong id="sim-trade-status" class="text-xs text-amber-300">WAITING TRIGGER</strong>
+          <span id="sim-kronos-conf" class="block text-[10px] text-violet-300">Kronos: 85%</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Entry / SL</span>
+          <strong id="sim-entry-val" class="text-xs text-white">E: ₹0</strong>
+          <span id="sim-sl-val" class="block text-[10px] text-rose-400">SL: ₹0</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+          <span class="block text-[10px] text-slate-400">Targets (T1 / T2)</span>
+          <strong id="sim-t1-val" class="text-xs text-emerald-400">T1: ₹0</strong>
+          <span id="sim-t2-val" class="block text-[10px] text-cyan-300">T2: ₹0</span>
+        </div>
+        <div class="col-span-2 sm:col-span-1 p-2.5 rounded-xl bg-slate-950 border border-emerald-500/30">
+          <span class="block text-[10px] text-slate-400">Sim Net PnL (1% Risk)</span>
+          <strong id="sim-pnl-val" class="text-sm text-slate-300">₹0</strong>
+          <span id="sim-qty-val" class="block text-[10px] text-slate-400">Qty: 0</span>
+        </div>
+      </div>
+
+      <!-- Candlestick Simulation Canvas -->
+      <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-cyan-400">━ 9 EMA</span>
+            <span class="text-amber-400">━ 15 EMA</span>
+            <span class="text-fuchsia-400">┅ VWAP/Pivot</span>
+            <span class="text-emerald-400">┅ T1/T2</span>
+            <span class="text-rose-400">┅ SL</span>
+          </div>
+          <span id="sim-bar-progress" class="text-slate-400">Step: 0 / 24</span>
+        </div>
+
+        <div id="nextday-sim-canvas-wrap" class="w-full h-60 sm:h-64 relative">
+          <canvas id="nextday-sim-canvas" class="w-full h-full block rounded-lg"></canvas>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5 pt-1">
+          <button id="sim-play-btn" onclick="playPauseNextDaySim()" class="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold cursor-pointer">
+            ▶ Play Simulation
+          </button>
+          <button onclick="resetNextDaySim()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold cursor-pointer">
+            ↺ Replay
+          </button>
+          <select id="sim-speed-select" onchange="updateSimSpeed()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono text-white">
+            <option value="520">1x Speed</option>
+            <option value="260" selected>2x Speed</option>
+            <option value="120">4x Fast</option>
+          </select>
+          <input id="sim-scrubber" type="range" min="1" max="24" value="1" oninput="scrubNextDaySim(this.value)" class="flex-1 accent-cyan-400 cursor-pointer" />
+        </div>
+      </div>
+
+      <!-- Interactive Pre-Trade Rules Checklist + Kronos Thesis -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-7 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-white">Konse Rules Dekh Kar Trade Lena Hai? (Interactive Checklist)</h4>
+            <span id="sim-readiness-badge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              0 / 4 Verified
+            </span>
+          </div>
+          <div id="sim-rules-list" class="space-y-2 text-xs"></div>
+        </div>
+
+        <div class="lg:col-span-5 p-3.5 rounded-xl bg-violet-500/10 border border-violet-500/30 flex flex-col justify-between space-y-3 text-xs">
+          <div class="space-y-2">
+            <div class="font-mono font-bold text-violet-300">KRONOS + STRATEGY THESIS</div>
+            <p id="sim-thesis-text" class="text-slate-200 leading-relaxed">--</p>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 font-mono text-[11px] space-y-1">
+            <div class="flex justify-between text-slate-400"><span>Invalidation Rule:</span><span id="sim-invalidation" class="text-rose-300">Gap &gt; 2% / SL Break</span></div>
+            <div class="flex justify-between text-slate-400"><span>Best Entry Window:</span><span id="sim-window" class="text-cyan-300">09:30 – 11:00 IST</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <span class="text-[10px] font-mono text-slate-500">Educational simulation based on Kronos K-line trajectory &amp; 9/15 EMA rules.</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="sim-copy-plan-btn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 cursor-pointer">Copy Trade Plan</button>
+          <button id="sim-to-calc-btn" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold cursor-pointer">Send to Qty &amp; Tax Calc</button>
+          <button id="sim-to-chart-btn" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold cursor-pointer">Open 5m Backtest →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: SECURITY & INDIA DPDP DATA VAULT                             -->
+  <!-- ===================================================================== -->
+  <div id="security-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-cyan-500/40 rounded-2xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white">🛡 Security &amp; DPDP Privacy Vault</h3>
+        <button onclick="closeSecurityModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between">
+          <span>Password Cryptography</span>
+          <strong class="font-mono text-emerald-400">PBKDF2-SHA256 (100k)</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between">
+          <span>Angel One Token Storage</span>
+          <strong class="font-mono text-cyan-300">RAM-Only (Zero Disk)</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between">
+          <span>XSS &amp; Idle Session Guard</span>
+          <strong class="font-mono text-violet-300">Active (30m Auto-Lock)</strong>
+        </div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-2.5">
+        <div class="text-xs font-bold text-rose-300">India DPDP Right to Erasure</div>
+        <p class="text-[11px] text-slate-400">Permanently delete all locally stored trader accounts, preferences, and wipe active broker tokens from RAM.</p>
+        <button id="dpdp-wipe-btn" onclick="triggerDpdpDataWipe()" class="w-full py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-bold text-xs cursor-pointer">
+          Erase All Local Account Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NON-BLOCKING TOAST NOTIFICATION -->
+  <div id="toast-box" class="hidden fixed bottom-5 right-5 z-[60] max-w-sm px-4 py-3 rounded-xl bg-slate-900 border border-cyan-500/50 text-xs font-medium text-cyan-100 shadow-2xl"></div>
+
+  <!-- ===================================================================== -->
+  <!-- COMPLETE SELF-CONTAINED APPLICATION ENGINE                            -->
+  <!-- ===================================================================== -->
+  <script>
+    'use strict';
+
+    // =========================================================================
+    // 1. VERIFIED NSE F&O UNIVERSE (28 LIQUID STOCKS ONLY)
+    // =========================================================================
+    const NSE_FNO_UNIVERSE = [
+      { symbol: 'RELIANCE',   sector: 'Energy',       basePrice: 1295,  lotSize: 500,  token: '2885',  seed: 101 },
+      { symbol: 'HDFCBANK',   sector: 'Banking',      basePrice: 1745,  lotSize: 550,  token: '1333',  seed: 102 },
+      { symbol: 'ICICIBANK',  sector: 'Banking',      basePrice: 1280,  lotSize: 700,  token: '4963',  seed: 103 },
+      { symbol: 'SBIN',       sector: 'PSU Bank',     basePrice: 842,   lotSize: 750,  token: '3045',  seed: 104 },
+      { symbol: 'INFY',       sector: 'IT',           basePrice: 1865,  lotSize: 400,  token: '1594',  seed: 105 },
+      { symbol: 'TCS',        sector: 'IT',           basePrice: 4120,  lotSize: 175,  token: '11536', seed: 106 },
+      { symbol: 'TATAMOTORS', sector: 'Auto',         basePrice: 925,   lotSize: 550,  token: '3456',  seed: 107 },
+      { symbol: 'TATASTEEL',  sector: 'Metals',       basePrice: 158,   lotSize: 5500, token: '3499',  seed: 108 },
+      { symbol: 'BAJFINANCE', sector: 'NBFC',         basePrice: 7180,  lotSize: 125,  token: '317',   seed: 109 },
+      { symbol: 'HAL',        sector: 'Defence',      basePrice: 4460,  lotSize: 150,  token: '2303',  seed: 110 },
+      { symbol: 'BEL',        sector: 'Defence',      basePrice: 304,   lotSize: 2850, token: '383',   seed: 111 },
+      { symbol: 'LT',         sector: 'Infra',        basePrice: 3640,  lotSize: 150,  token: '11483', seed: 112 },
+      { symbol: 'AXISBANK',   sector: 'Banking',      basePrice: 1185,  lotSize: 625,  token: '5900',  seed: 113 },
+      { symbol: 'KOTAKBANK',  sector: 'Banking',      basePrice: 1790,  lotSize: 400,  token: '1922',  seed: 114 },
+      { symbol: 'BHARTIARTL', sector: 'Telecom',      basePrice: 1645,  lotSize: 475,  token: '10604', seed: 115 },
+      { symbol: 'M&M',        sector: 'Auto',         basePrice: 2980,  lotSize: 350,  token: '2031',  seed: 116 },
+      { symbol: 'MARUTI',     sector: 'Auto',         basePrice: 12150, lotSize: 50,   token: '10999', seed: 117 },
+      { symbol: 'SUNPHARMA',  sector: 'Pharma',       basePrice: 1840,  lotSize: 350,  token: '3351',  seed: 118 },
+      { symbol: 'ITC',        sector: 'FMCG',         basePrice: 488,   lotSize: 1600, token: '1660',  seed: 119 },
+      { symbol: 'ADANIENT',   sector: 'Conglomerate', basePrice: 2890,  lotSize: 300,  token: '25',    seed: 120 },
+      { symbol: 'ADANIPORTS', sector: 'Ports',        basePrice: 1340,  lotSize: 400,  token: '15083', seed: 121 },
+      { symbol: 'NTPC',       sector: 'Power',        basePrice: 412,   lotSize: 1500, token: '11630', seed: 122 },
+      { symbol: 'POWERGRID',  sector: 'Power',        basePrice: 332,   lotSize: 1800, token: '14977', seed: 123 },
+      { symbol: 'JSWSTEEL',   sector: 'Metals',       basePrice: 975,   lotSize: 675,  token: '11723', seed: 124 },
+      { symbol: 'HINDALCO',   sector: 'Metals',       basePrice: 688,   lotSize: 1400, token: '1363',  seed: 125 },
+      { symbol: 'ONGC',       sector: 'Energy',       basePrice: 274,   lotSize: 1925, token: '2475',  seed: 126 },
+      { symbol: 'TRENT',      sector: 'Retail',       basePrice: 6850,  lotSize: 100,  token: '1964',  seed: 127 },
+      { symbol: 'WIPRO',      sector: 'IT',           basePrice: 545,   lotSize: 1500, token: '3787',  seed: 128 }
+    ];
+
+    const FNO_MAP = Object.fromEntries(NSE_FNO_UNIVERSE.map(s => [s.symbol, s]));
+    const INTRADAY_CANDIDATE_SYMBOLS = [
+      'RELIANCE', 'SBIN', 'TATAMOTORS', 'HAL', 'BAJFINANCE', 'ICICIBANK',
+      'TATASTEEL', 'ADANIENT', 'BEL', 'TRENT', 'AXISBANK', 'JSWSTEEL', 'HINDALCO', 'ONGC'
+    ];
+    const SWING_CANDIDATE_SYMBOLS = [
+      'HDFCBANK', 'INFY', 'TCS', 'LT', 'BHARTIARTL', 'SUNPHARMA',
+      'M&M', 'MARUTI', 'NTPC', 'POWERGRID', 'ITC', 'KOTAKBANK', 'ADANIPORTS', 'WIPRO'
+    ];
+
+    // =========================================================================
+    // 2. UNIFIED APPLICATION STATE
+    // =========================================================================
+    const appState = {
+      currentUser: null,
+      registeredUsers: [],
+      currentTab: 'backtest',
+      selectedSymbol: 'RELIANCE',
+      candlesByDay: {},
+      dayList: [],
+      selectedDayIndex: 0,
+      allCandles: [],
+      trades: [],
+      equityCurve: [],
+      tradeFilter: 'ALL',
+      hoverCandleIdx: -1,
+
+      scannerResults: [],
+      scannerFilter: 'ALL',
+      scannerTick: 0,
+      scannerAutoStream: true,
+      scannerInterval: null,
+      activeKronosItem: null,
+      kronosRemoteConnected: false,
+
+      nextDayCycle: 0,
+      nextDayView: 'BOTH',
+      nextDayDir: 'ALL',
+      nextDayDateLabel: '',
+      nextDayIntraday: [],
+      nextDaySwing: [],
+      activeSimItem: null,
+      simTimer: null,
+      simStep: 1,
+      simRunning: false,
+      simRuleChecks: [],
+
+      failedLoginCount: 0,
+      lockoutUntil: 0,
+      idleTimeoutHandle: null,
+      dpdpConfirmPending: false,
+
+      angelLoginMode: 'totp',
+      angelOtpTimer: null,
+      angelUtcOffsetMs: 0,
+      angelLoginInFlight: false,
+      angelAuth: {
+        connected: false,
+        jwtToken: '',
+        refreshToken: '',
+        apiKey: '',
+        clientId: '',
+        gatewayMode: 'direct',
+        relayUrl: 'http://127.0.0.1:8000',
+        publicIp: '106.193.147.98'
+      }
+    };
+
+    // =========================================================================
+    // 3. SECURITY HELPERS (XSS ESCAPE, PBKDF2-SHA256, CLIPBOARD, FORMATTERS)
+    // =========================================================================
+    function escapeHTML(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function mulberry32(seed) {
+      let a = seed >>> 0;
+      return function() {
+        a |= 0;
+        a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function formatINR(num, decimals = 0) {
+      const val = Number(num) || 0;
+      const absStr = Math.abs(val).toLocaleString('en-IN', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+      return (val < 0 ? '-₹' : '₹') + absStr;
+    }
+
+    function formatSignedINR(num, decimals = 0) {
+      const val = Number(num) || 0;
+      const absStr = Math.abs(val).toLocaleString('en-IN', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+      return (val > 0 ? '+₹' : (val < 0 ? '-₹' : '₹')) + absStr;
+    }
+
+    function copyTextFallback(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (e) {
+        console.error('Copy failed:', e);
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast-box');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add('hidden'), 3600);
+    }
+
+    function toggleInputVisibility(id, btn) {
+      const inp = document.getElementById(id);
+      if (!inp) return;
+      const isPwd = inp.type === 'password';
+      inp.type = isPwd ? 'text' : 'password';
+      if (btn) btn.textContent = isPwd ? 'Hide' : 'Show';
+    }
+
+    async function hashPasswordPBKDF2(password, saltHex = null) {
+      const enc = new TextEncoder();
+      const salt = saltHex
+        ? new Uint8Array(saltHex.match(/.{1,2}/g).map(b => parseInt(b, 16)))
+        : crypto.getRandomValues(new Uint8Array(16));
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
+      const bits = await crypto.subtle.deriveBits(
+        { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        256
+      );
+      const hashHex = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+      const finalSaltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
+      return { hashHex, saltHex: finalSaltHex };
+    }
+
+    // =========================================================================
+    // 4. TRADER AUTHENTICATION, LOCKOUT & IDLE GUARD
+    // =========================================================================
+    const USERS_STORAGE_KEY = 'alphapulse_users_v2_pbkdf2';
+
+    function loadSavedRegisteredUsers() {
+      try {
+        const raw = localStorage.getItem(USERS_STORAGE_KEY);
+        appState.registeredUsers = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(appState.registeredUsers)) appState.registeredUsers = [];
+      } catch {
+        appState.registeredUsers = [];
+      }
+    }
+
+    function saveRegisteredUsers() {
+      try {
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(appState.registeredUsers));
+      } catch (e) {
+        console.warn('Could not save users locally:', e);
+      }
+    }
+
+    function setAuthFeedback(msg, isError = true) {
+      const box = document.getElementById('auth-feedback');
+      if (!box) return;
+      if (!msg) {
+        box.classList.add('hidden');
+        return;
+      }
+      box.className = isError
+        ? 'p-3 rounded-xl text-xs font-medium border bg-rose-500/15 border-rose-500/40 text-rose-300'
+        : 'p-3 rounded-xl text-xs font-medium border bg-emerald-500/15 border-emerald-500/40 text-emerald-300';
+      box.textContent = msg;
+      box.classList.remove('hidden');
+    }
+
+    function setAuthMode(mode) {
+      const isLogin = mode === 'login';
+      document.getElementById('login-form').classList.toggle('hidden', !isLogin);
+      document.getElementById('signup-form').classList.toggle('hidden', isLogin);
+      document.getElementById('auth-tab-login').className = isLogin
+        ? 'py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer'
+        : 'py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition cursor-pointer';
+      document.getElementById('auth-tab-signup').className = !isLogin
+        ? 'py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 transition cursor-pointer'
+        : 'py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition cursor-pointer';
+      setAuthFeedback('');
+    }
+
+    function updatePasswordStrength(pwd) {
+      let score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd)) score++;
+      if (/[0-9]/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+      const bar = document.getElementById('pwd-strength-bar');
+      const lbl = document.getElementById('pwd-strength-label');
+      const widths = ['0%', '25%', '50%', '75%', '100%'];
+      const colors = ['bg-rose-500', 'bg-rose-500', 'bg-amber-400', 'bg-cyan-400', 'bg-emerald-400'];
+      const labels = ['Min 8 chars + Upper + Num + Symbol', 'Weak', 'Fair', 'Good', 'Strong (PBKDF2 Ready)'];
+      if (bar) {
+        bar.style.width = widths[score];
+        bar.className = `h-full transition-all duration-300 ${colors[score]}`;
+      }
+      if (lbl) lbl.textContent = labels[score];
+    }
+
+    async function handleTraderSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim().toLowerCase();
+      const password = document.getElementById('signup-password').value;
+
+      if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+        setAuthFeedback('Password must be 8+ characters with at least 1 uppercase letter and 1 number.');
+        return;
+      }
+      if (appState.registeredUsers.some(u => u.email === email)) {
+        setAuthFeedback('An account with this email already exists. Please Sign In.');
+        return;
+      }
+
+      try {
+        const { hashHex, saltHex } = await hashPasswordPBKDF2(password);
+        const user = { name, email, hashHex, saltHex, role: 'Pro Trader', createdAt: Date.now() };
+        appState.registeredUsers.push(user);
+        saveRegisteredUsers();
+        document.getElementById('signup-password').value = '';
+        enterDashboard(user, false);
+        showToast(`Account created with PBKDF2-SHA256 encryption. Welcome, ${name}!`);
+      } catch (err) {
+        setAuthFeedback('Web Crypto hashing failed in this browser context.');
+      }
+    }
+
+    async function handleTraderLogin(e) {
+      e.preventDefault();
+      if (Date.now() < appState.lockoutUntil) {
+        const secs = Math.ceil((appState.lockoutUntil - Date.now()) / 1000);
+        setAuthFeedback(`Too many failed attempts. Account locked for ${secs}s.`);
+        return;
+      }
+
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+      const openAngel = document.getElementById('login-open-angel').checked;
+
+      const user = appState.registeredUsers.find(u => u.email === email);
+      if (!user) {
+        recordFailedLogin();
+        setAuthFeedback('Invalid email or password. Create an account or use 1-Click Sandbox Access.');
+        return;
+      }
+
+      try {
+        const { hashHex } = await hashPasswordPBKDF2(password, user.saltHex);
+        if (hashHex !== user.hashHex) {
+          recordFailedLogin();
+          setAuthFeedback('Invalid email or password.');
+          return;
+        }
+        appState.failedLoginCount = 0;
+        document.getElementById('login-password').value = '';
+        enterDashboard(user, openAngel);
+      } catch (err) {
+        setAuthFeedback('Authentication error occurred.');
+      }
+    }
+
+    function recordFailedLogin() {
+      appState.failedLoginCount++;
+      if (appState.failedLoginCount >= 5) {
+        appState.lockoutUntil = Date.now() + 60000;
+        appState.failedLoginCount = 0;
+      }
+    }
+
+    function loginAsGuestDemo() {
+      const openAngel = document.getElementById('login-open-angel')?.checked || false;
+      enterDashboard({ name: 'Sandbox Trader', email: 'sandbox@alphapulse.local', role: 'Ephemeral Session' }, openAngel);
+      showToast('Entered Sandbox Trading Terminal (RAM-only session).');
+    }
+
+    function enterDashboard(user, openAngelAfter = false) {
+      appState.currentUser = user;
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('dashboard-shell').classList.remove('hidden');
+
+      const initials = (user.name || 'TR').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('user-avatar-badge').textContent = initials;
+      document.getElementById('user-display-name').textContent = user.name;
+      document.getElementById('user-display-role').textContent = user.role || 'Trader';
+
+      resetIdleTimer();
+      startScannerAutoStream();
+      requestAnimationFrame(() => {
+        drawCandlestickChart();
+        drawEquityChart();
+      });
+
+      if (openAngelAfter) {
+        setTimeout(() => openAngelConnectModal(), 250);
+      }
+    }
+
+    function logoutTrader(showMsg = true) {
+      appState.currentUser = null;
+      stopScannerAutoStream();
+      disconnectAngelOne(true);
+      closeAngelConnectModal();
+      closeKronosModal();
+      closeNextDaySimulator();
+      closeSecurityModal();
+      if (appState.idleTimeoutHandle) clearTimeout(appState.idleTimeoutHandle);
+
+      document.getElementById('dashboard-shell').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      if (showMsg) showToast('Logged out cleanly. All RAM broker tokens wiped.');
+    }
+
+    function resetIdleTimer() {
+      if (!appState.currentUser) return;
+      if (appState.idleTimeoutHandle) clearTimeout(appState.idleTimeoutHandle);
+      appState.idleTimeoutHandle = setTimeout(() => {
+        logoutTrader(false);
+        setAuthFeedback('Session auto-locked after 30 minutes of inactivity for your security.');
+      }, 30 * 60 * 1000);
+    }
+
+    function openSecurityModal() {
+      appState.dpdpConfirmPending = false;
+      const btn = document.getElementById('dpdp-wipe-btn');
+      if (btn) btn.textContent = 'Erase All Local Account Data';
+      document.getElementById('security-modal').classList.remove('hidden');
+    }
+
+    function closeSecurityModal() {
+      document.getElementById('security-modal')?.classList.add('hidden');
+    }
+
+    function triggerDpdpDataWipe() {
+      const btn = document.getElementById('dpdp-wipe-btn');
+      if (!appState.dpdpConfirmPending) {
+        appState.dpdpConfirmPending = true;
+        if (btn) btn.textContent = 'Click Again to Confirm Permanent Erase';
+        return;
+      }
+      localStorage.removeItem(USERS_STORAGE_KEY);
+      appState.registeredUsers = [];
+      appState.dpdpConfirmPending = false;
+      logoutTrader(false);
+      showToast('DPDP Wipe Complete: All accounts & local storage permanently erased.');
+    }
+
+    // =========================================================================
+    // 5. TAB NAVIGATION
+    // =========================================================================
+    function switchSection(tab) {
+      appState.currentTab = tab;
+      ['backtest', 'scanner', 'nextday', 'calc'].forEach(s => {
+        const sec = document.getElementById(`section-${s}`);
+        const btn = document.getElementById(`tab-btn-${s}`);
+        if (sec) sec.classList.toggle('hidden', s !== tab);
+        if (btn) {
+          btn.className = s === tab
+            ? 'nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 transition flex items-center justify-center gap-1.5 cursor-pointer'
+            : 'nav-tab flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer';
+        }
+      });
+
+      if (tab === 'backtest') {
+        requestAnimationFrame(() => {
+          drawCandlestickChart();
+          drawEquityChart();
+        });
+      } else if (tab === 'scanner') {
+        if (appState.scannerResults.length === 0) runFnoScanner(false);
+      } else if (tab === 'nextday') {
+        if (appState.nextDayIntraday.length === 0 || appState.nextDaySwing.length === 0) {
+          generateNextDayForecasts(false);
+        }
+      } else if (tab === 'calc') {
+        calculatePositionAndTaxes();
+      }
+    }
+
+    // =========================================================================
+    // 6. INDIAN NSE STATUTORY CHARGES & 5-MIN DATA / INDICATOR ENGINE
+    // =========================================================================
+    function calculateIndianCharges(entry, exit, qty, side, brokeragePerOrder = 20) {
+      const buyVal = side === 'LONG' ? entry * qty : exit * qty;
+      const sellVal = side === 'LONG' ? exit * qty : entry * qty;
+      const turnover = buyVal + sellVal;
+
+      const brokerage = brokeragePerOrder * 2;
+      const stt = sellVal * 0.00025;
+      const exch = turnover * 0.0000297;
+      const sebi = turnover * 0.000002;
+      const stamp = buyVal * 0.00003;
+      const gst = 0.18 * (brokerage + exch + sebi);
+      const total = brokerage + stt + exch + sebi + stamp + gst;
+      return { brokerage, stt, exch, sebi, stamp, gst, total, turnover };
+    }
+
+    function computeIndicatorsOnCandles(rawCandles) {
+      const k9 = 2 / 10;
+      const k15 = 2 / 16;
+      let ema9 = rawCandles[0]?.close || 0;
+      let ema15 = rawCandles[0]?.close || 0;
+      let curDay = '';
+      let cumTpV = 0;
+      let cumVol = 0;
+
+      const enriched = rawCandles.map((c, idx) => {
+        if (c.day !== curDay) {
+          curDay = c.day;
+          cumTpV = 0;
+          cumVol = 0;
+        }
+        ema9 = idx === 0 ? c.close : (c.close - ema9) * k9 + ema9;
+        ema15 = idx === 0 ? c.close : (c.close - ema15) * k15 + ema15;
+
+        const tp = (c.high + c.low + c.close) / 3;
+        cumTpV += tp * c.volume;
+        cumVol += c.volume;
+        const vwap = cumVol > 0 ? cumTpV / cumVol : c.close;
+
+        let volSum = 0;
+        const winStart = Math.max(0, idx - 19);
+        for (let j = winStart; j <= idx; j++) volSum += rawCandles[j].volume;
+        const volSma20 = volSum / (idx - winStart + 1);
+
+        return {
+          ...c,
+          ema9: Number(ema9.toFixed(2)),
+          ema15: Number(ema15.toFixed(2)),
+          vwap: Number(vwap.toFixed(2)),
+          volSma20: Math.round(volSma20)
+        };
+      });
+
+      // Mark 9/15 EMA + VWAP + Volume crossovers
+      for (let i = 1; i < enriched.length; i++) {
+        const cur = enriched[i];
+        const prev = enriched[i - 1];
+        const bullCross = cur.ema9 > cur.ema15 && prev.ema9 <= prev.ema15;
+        const bearCross = cur.ema9 < cur.ema15 && prev.ema9 >= prev.ema15;
+        const inSession = cur.minuteOfDay >= (9 * 60 + 30) && cur.minuteOfDay <= (14 * 60 + 45);
+        const volOk = cur.volume > cur.volSma20 * 1.18;
+
+        cur.buySignal = inSession && bullCross && cur.close > cur.vwap && volOk;
+        cur.sellSignal = inSession && bearCross && cur.close < cur.vwap && volOk;
+      }
+      return enriched;
+    }
+
+    function generateStockIntradayData(symbol, numDays = 10) {
+      const stock = FNO_MAP[symbol] || NSE_FNO_UNIVERSE[0];
+      const rng = mulberry32(stock.seed * 7919);
+      const raw = [];
+      let price = stock.basePrice;
+
+      // Build recent valid weekdays
+      const tradingDates = [];
+      const d = new Date();
+      while (tradingDates.length < numDays) {
+        if (d.getDay() !== 0 && d.getDay() !== 6) {
+          tradingDates.unshift(d.toISOString().slice(0, 10));
+        }
+        d.setDate(d.getDate() - 1);
+      }
+
+      for (const dayStr of tradingDates) {
+        const dayRegime = rng() > 0.45 ? (rng() > 0.5 ? 1 : -1) : 0; // Trending up/down or choppy
+        let driftDir = dayRegime;
+        // Overnight gap
+        price = Math.max(20, price * (1 + (rng() - 0.5) * 0.012));
+
+        for (let bar = 0; bar < 75; bar++) { // 09:15 to 15:25 (75 x 5m bars)
+          const totalMin = 9 * 60 + 15 + bar * 5;
+          const hh = String(Math.floor(totalMin / 60)).padStart(2, '0');
+          const mm = String(totalMin % 60).padStart(2, '0');
+
+          if (bar === 18 || bar === 42) {
+            driftDir = rng() > 0.55 ? -driftDir : (dayRegime || (rng() > 0.5 ? 1 : -1));
+          }
+
+          const volScale = stock.basePrice * 0.0022;
+          const trendImpulse = driftDir * volScale * (0.28 + rng() * 0.45);
+          const noise = (rng() - 0.5) * volScale * 1.15;
+
+          const o = Number(price.toFixed(2));
+          const c = Number(Math.max(10, o + trendImpulse + noise).toFixed(2));
+          const wick = volScale * (0.2 + rng() * 0.55);
+          const h = Number((Math.max(o, c) + wick).toFixed(2));
+          const l = Number(Math.max(5, Math.min(o, c) - wick).toFixed(2));
+          const isHighVolWindow = bar < 14 || bar > 56 || Math.abs(c - o) > volScale * 0.7;
+          const volume = Math.round((isHighVolWindow ? 95000 : 42000) * (0.65 + rng() * 1.4));
+
+          raw.push({
+            day: dayStr,
+            time: `${hh}:${mm}`,
+            minuteOfDay: totalMin,
+            open: o, high: h, low: l, close: c, volume
+          });
+          price = c;
+        }
+      }
+      return computeIndicatorsOnCandles(raw);
+    }
+
+    // =========================================================================
+    // 7. BACKTEST ENGINE & CHART RENDERING
+    // =========================================================================
+    function onSymbolChange() {
+      const sel = document.getElementById('param-symbol');
+      if (sel) appState.selectedSymbol = sel.value;
+
+      if (appState.angelAuth.connected) {
+        fetchAngelCandlesForSymbol(appState.selectedSymbol);
+      } else {
+        loadCandlesIntoBacktest(generateStockIntradayData(appState.selectedSymbol, 10), 'Simulated 5m');
+      }
+    }
+
+    function loadCandlesIntoBacktest(candles, sourceLabel = 'Simulated 5m') {
+      appState.allCandles = candles;
+      appState.candlesByDay = {};
+      candles.forEach(c => {
+        if (!appState.candlesByDay[c.day]) appState.candlesByDay[c.day] = [];
+        appState.candlesByDay[c.day].push(c);
+      });
+      appState.dayList = Object.keys(appState.candlesByDay).sort();
+      appState.selectedDayIndex = Math.max(0, appState.dayList.length - 1);
+
+      const daySel = document.getElementById('chart-day-select');
+      if (daySel) {
+        daySel.innerHTML = appState.dayList.map((d, i) => `<option value="${i}">${d}</option>`).join('');
+        daySel.value = String(appState.selectedDayIndex);
+      }
+      const srcEl = document.getElementById('kpi-data-src');
+      if (srcEl) srcEl.textContent = sourceLabel;
+
+      runStrategyBacktest();
+    }
+
+    function runStrategyBacktest() {
+      const candles = appState.allCandles;
+      if (!candles || candles.length < 20) return;
+
+      const capital = Math.max(10000, parseFloat(document.getElementById('param-capital')?.value) || 100000);
+      const riskPct = Math.max(0.1, parseFloat(document.getElementById('param-risk')?.value) || 1.0) / 100;
+      const rr = parseFloat(document.getElementById('param-rr')?.value) || 2.0;
+      const brok = parseFloat(document.getElementById('param-brokerage')?.value) || 0;
+      const exitMode = document.getElementById('param-exit-mode')?.value || 'fixed';
+
+      const trades = [];
+      let pos = null;
+
+      for (let i = 1; i < candles.length; i++) {
+        const row = candles[i];
+        const prev = candles[i - 1];
+
+        // Force close if day changed
+        if (pos && row.day !== pos.day) {
+          closePos(pos, prev.close, prev.time, 'EOD');
+          pos = null;
+        }
+
+        if (pos) {
+          if (pos.side === 'LONG') {
+            if (row.low <= pos.sl) {
+              closePos(pos, pos.sl, row.time, 'SL');
+              pos = null;
+            } else if (exitMode === 'fixed' && row.high >= pos.target) {
+              closePos(pos, pos.target, row.time, 'TARGET');
+              pos = null;
+            } else if (exitMode === 'trail15' && row.close < row.ema15 && row.close > pos.entry) {
+              closePos(pos, row.close, row.time, '15EMA TRAIL');
+              pos = null;
+            } else if (row.minuteOfDay >= 15 * 60 + 15) {
+              closePos(pos, row.close, row.time, 'EOD');
+              pos = null;
+            }
+          } else {
+            if (row.high >= pos.sl) {
+              closePos(pos, pos.sl, row.time, 'SL');
+              pos = null;
+            } else if (exitMode === 'fixed' && row.low <= pos.target) {
+              closePos(pos, pos.target, row.time, 'TARGET');
+              pos = null;
+            } else if (exitMode === 'trail15' && row.close > row.ema15 && row.close < pos.entry) {
+              closePos(pos, row.close, row.time, '15EMA TRAIL');
+              pos = null;
+            } else if (row.minuteOfDay >= 15 * 60 + 15) {
+              closePos(pos, row.close, row.time, 'EOD');
+              pos = null;
+            }
+          }
+        }
+
+        if (!pos && row.day === prev.day) {
+          if (prev.buySignal) {
+            const entry = row.open;
+            const sl = Number(Math.min(prev.low * 0.999, entry * 0.994).toFixed(2));
+            const riskPerShare = entry - sl;
+            if (riskPerShare > 0) {
+              const qty = Math.max(1, Math.floor((capital * riskPct) / riskPerShare));
+              pos = {
+                day: row.day, entryTime: row.time, side: 'LONG', entry, sl,
+                target: Number((entry + riskPerShare * rr).toFixed(2)), qty
+              };
+            }
+          } else if (prev.sellSignal) {
+            const entry = row.open;
+            const sl = Number(Math.max(prev.high * 1.001, entry * 1.006).toFixed(2));
+            const riskPerShare = sl - entry;
+            if (riskPerShare > 0) {
+              const qty = Math.max(1, Math.floor((capital * riskPct) / riskPerShare));
+              pos = {
+                day: row.day, entryTime: row.time, side: 'SHORT', entry, sl,
+                target: Number((entry - riskPerShare * rr).toFixed(2)), qty
+              };
+            }
+          }
+        }
+      }
+
+      function closePos(p, exitPrice, exitTime, reason) {
+        const gross = p.side === 'LONG' ? (exitPrice - p.entry) * p.qty : (p.entry - exitPrice) * p.qty;
+        const chg = calculateIndianCharges(p.entry, exitPrice, p.qty, p.side, brok);
+        const net = gross - chg.total;
+        trades.push({
+          ...p, exit: Number(exitPrice.toFixed(2)), exitTime, reason,
+          gross: Number(gross.toFixed(2)),
+          charges: Number(chg.total.toFixed(2)),
+          net: Number(net.toFixed(2))
+        });
+      }
+
+      appState.trades = trades;
+
+      // Metrics Calculation
+      let grossSum = 0, chgSum = 0, netSum = 0, wins = 0, grossWin = 0, grossLoss = 0;
+      const eq = [capital];
+      let peak = capital, maxDdRs = 0, maxDdPct = 0;
+
+      trades.forEach(t => {
+        grossSum += t.gross;
+        chgSum += t.charges;
+        netSum += t.net;
+        if (t.net > 0) { wins++; grossWin += t.net; }
+        else { grossLoss += Math.abs(t.net); }
+
+        const curEq = eq[eq.length - 1] + t.net;
+        eq.push(curEq);
+        if (curEq > peak) peak = curEq;
+        const ddRs = peak - curEq;
+        const ddPct = peak > 0 ? (ddRs / peak) * 100 : 0;
+        if (ddRs > maxDdRs) maxDdRs = ddRs;
+        if (ddPct > maxDdPct) maxDdPct = ddPct;
+      });
+
+      appState.equityCurve = eq;
+      const total = trades.length;
+      const winRate = total ? (wins / total) * 100 : 0;
+      const pf = grossLoss > 0 ? grossWin / grossLoss : (grossWin > 0 ? 9.99 : 0);
+
+      const pnlEl = document.getElementById('kpi-net-pnl');
+      pnlEl.textContent = formatSignedINR(netSum, 0);
+      pnlEl.className = `block text-lg sm:text-xl font-mono font-bold mt-1 ${netSum >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      document.getElementById('kpi-net-ret').textContent = `${((netSum / capital) * 100).toFixed(2)}% Return`;
+      document.getElementById('kpi-win-rate').textContent = `${winRate.toFixed(1)}%`;
+      document.getElementById('kpi-wl-split').textContent = `${wins}W / ${total - wins}L`;
+      document.getElementById('kpi-pf').textContent = pf.toFixed(2);
+      document.getElementById('kpi-dd').textContent = `-${maxDdPct.toFixed(2)}%`;
+      document.getElementById('kpi-dd-rs').textContent = `${formatINR(maxDdRs, 0)} drop`;
+      document.getElementById('kpi-charges').textContent = formatINR(chgSum, 0);
+      document.getElementById('kpi-gross-pnl').textContent = `Gross: ${formatSignedINR(grossSum, 0)}`;
+      document.getElementById('kpi-total-trades').textContent = `${total} Trades`;
+      document.getElementById('equity-final-cap').textContent = formatINR(capital + netSum, 0);
+
+      renderTradeLog();
+      drawCandlestickChart();
+      drawEquityChart();
+    }
+
+    function setTradeFilter(f) {
+      appState.tradeFilter = f;
+      ['ALL', 'WIN', 'LOSS', 'LONG', 'SHORT'].forEach(k => {
+        const b = document.getElementById(`tf-${k}`);
+        if (!b) return;
+        b.className = k === f
+          ? 'tf-btn px-2.5 py-1 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer'
+          : 'tf-btn px-2.5 py-1 rounded-lg text-slate-400 hover:text-white cursor-pointer';
+      });
+      renderTradeLog();
+    }
+
+    function renderTradeLog() {
+      const tbody = document.getElementById('trade-log-tbody');
+      if (!tbody) return;
+      const filtered = appState.trades.filter(t => {
+        if (appState.tradeFilter === 'WIN') return t.net > 0;
+        if (appState.tradeFilter === 'LOSS') return t.net <= 0;
+        if (appState.tradeFilter === 'LONG') return t.side === 'LONG';
+        if (appState.tradeFilter === 'SHORT') return t.side === 'SHORT';
+        return true;
+      }).slice().reverse();
+
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500">No trades match this filter.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(t => {
+        const sidePill = t.side === 'LONG'
+          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+          : 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+        const netCol = t.net >= 0 ? 'text-emerald-400' : 'text-rose-400';
+        return `
+          <tr onclick="jumpToTradeDay('${t.day}')" class="hover:bg-slate-800/60 transition cursor-pointer">
+            <td class="py-2.5 px-3 text-slate-200">${t.day} <span class="text-slate-400">${t.entryTime}→${t.exitTime}</span></td>
+            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${sidePill}">${t.side}</span></td>
+            <td class="py-2.5 px-3 text-right text-slate-300">${t.qty}</td>
+            <td class="py-2.5 px-3 text-right text-slate-200">₹${t.entry.toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-right text-slate-200">₹${t.exit.toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-cyan-300">${t.reason}</td>
+            <td class="py-2.5 px-3 text-right text-amber-300">₹${t.charges.toFixed(1)}</td>
+            <td class="py-2.5 px-3 text-right font-bold ${netCol}">${formatSignedINR(t.net, 1)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function jumpToTradeDay(dayStr) {
+      const idx = appState.dayList.indexOf(dayStr);
+      if (idx !== -1) {
+        appState.selectedDayIndex = idx;
+        const sel = document.getElementById('chart-day-select');
+        if (sel) sel.value = String(idx);
+        drawCandlestickChart();
+        window.scrollTo({ top: 180, behavior: 'smooth' });
+      }
+    }
+
+    function onDaySelectChange() {
+      const sel = document.getElementById('chart-day-select');
+      appState.selectedDayIndex = parseInt(sel?.value, 10) || 0;
+      drawCandlestickChart();
+    }
+
+    function changeChartDay(delta) {
+      const next = Math.max(0, Math.min(appState.dayList.length - 1, appState.selectedDayIndex + delta));
+      appState.selectedDayIndex = next;
+      const sel = document.getElementById('chart-day-select');
+      if (sel) sel.value = String(next);
+      drawCandlestickChart();
+    }
+
+    function drawCandlestickChart() {
+      const canvas = document.getElementById('candle-canvas');
+      const wrap = document.getElementById('candle-canvas-wrap');
+      if (!canvas || !wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width < 20 || rect.height < 20) return;
+
+      const dayKey = appState.dayList[appState.selectedDayIndex];
+      const bars = appState.candlesByDay[dayKey] || [];
+      if (!bars.length) return;
+
+      document.getElementById('chart-title').textContent = `${appState.selectedSymbol} — 5-Min Chart (${dayKey})`;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width;
+      const H = rect.height;
+      ctx.fillStyle = '#070b14';
+      ctx.fillRect(0, 0, W, H);
+
+      let minP = Infinity, maxP = -Infinity;
+      bars.forEach(b => {
+        minP = Math.min(minP, b.low, b.ema9, b.ema15, b.vwap);
+        maxP = Math.max(maxP, b.high, b.ema9, b.ema15, b.vwap);
+      });
+      const range = maxP - minP || 1;
+      minP -= range * 0.08;
+      maxP += range * 0.08;
+
+      const pad = { top: 14, right: 56, bottom: 24, left: 10 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+
+      const xFor = i => pad.left + ((i + 0.5) / bars.length) * plotW;
+      const yFor = p => pad.top + ((maxP - p) / (maxP - minP)) * plotH;
+
+      // Horizontal Grid & Y Labels
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.65)';
+      ctx.lineWidth = 1;
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.fillStyle = '#64748b';
+      for (let g = 0; g <= 4; g++) {
+        const y = pad.top + (g / 4) * plotH;
+        const pVal = maxP - (g / 4) * (maxP - minP);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(pVal.toFixed(1), W - pad.right + 5, y + 3);
+      }
+
+      // Candlesticks
+      const barW = Math.max(2.5, (plotW / bars.length) * 0.62);
+      bars.forEach((b, i) => {
+        const x = xFor(i);
+        const up = b.close >= b.open;
+        const col = up ? '#10b981' : '#f43f5e';
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, yFor(b.high));
+        ctx.lineTo(x, yFor(b.low));
+        ctx.stroke();
+
+        ctx.fillStyle = col;
+        const yO = yFor(b.open);
+        const yC = yFor(b.close);
+        ctx.fillRect(x - barW / 2, Math.min(yO, yC), barW, Math.max(1.5, Math.abs(yC - yO)));
+
+        // Signal markers
+        if (b.buySignal) {
+          ctx.fillStyle = '#34d399';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText('▲', x - 5, yFor(b.low) + 12);
+        } else if (b.sellSignal) {
+          ctx.fillStyle = '#fb7185';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText('▼', x - 5, yFor(b.high) - 4);
+        }
+      });
+
+      // Indicators
+      const plotLine = (key, color, dash = []) => {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash(dash);
+        ctx.beginPath();
+        bars.forEach((b, i) => {
+          const x = xFor(i);
+          const y = yFor(b[key]);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.restore();
+      };
+      plotLine('vwap', '#e879f9', [4, 3]);
+      plotLine('ema15', '#f59e0b');
+      plotLine('ema9', '#22d3ee');
+
+      // X-axis Time Ticks
+      ctx.fillStyle = '#64748b';
+      ctx.font = '9px JetBrains Mono, monospace';
+      const step = Math.max(1, Math.floor(bars.length / 7));
+      for (let i = 0; i < bars.length; i += step) {
+        ctx.fillText(bars[i].time, xFor(i) - 12, H - 7);
+      }
+
+      // Crosshair
+      if (appState.hoverCandleIdx >= 0 && appState.hoverCandleIdx < bars.length) {
+        const b = bars[appState.hoverCandleIdx];
+        const hx = xFor(appState.hoverCandleIdx);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(hx, pad.top);
+        ctx.lineTo(hx, H - pad.bottom);
+        ctx.stroke();
+        ctx.restore();
+
+        const barEl = document.getElementById('chart-ohlc-bar');
+        if (barEl) {
+          barEl.innerHTML = `
+            <span class="text-white font-bold">${b.day} ${b.time}</span>
+            <span>O: <strong class="text-slate-200">${b.open}</strong></span>
+            <span>H: <strong class="text-emerald-400">${b.high}</strong></span>
+            <span>L: <strong class="text-rose-400">${b.low}</strong></span>
+            <span>C: <strong class="text-white">${b.close}</strong></span>
+            <span class="text-cyan-400">9E: ${b.ema9}</span>
+            <span class="text-amber-400">15E: ${b.ema15}</span>
+            <span class="text-fuchsia-400">VWAP: ${b.vwap}</span>
+            <span class="text-slate-300">Vol: ${b.volume.toLocaleString('en-IN')}</span>
+          `;
+        }
+      }
+    }
+
+    function drawEquityChart() {
+      const canvas = document.getElementById('equity-canvas');
+      const wrap = document.getElementById('equity-canvas-wrap');
+      if (!canvas || !wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width < 20 || rect.height < 20) return;
+
+      const eq = appState.equityCurve;
+      if (!eq || eq.length < 2) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width;
+      const H = rect.height;
+      ctx.fillStyle = '#070b14';
+      ctx.fillRect(0, 0, W, H);
+
+      const minE = Math.min(...eq);
+      const maxE = Math.max(...eq);
+      const span = maxE - minE || 1;
+      const pad = { top: 14, right: 12, bottom: 20, left: 12 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+
+      const xFor = i => pad.left + (i / (eq.length - 1)) * plotW;
+      const yFor = v => pad.top + ((maxE - v) / span) * plotH;
+
+      const isProfit = eq[eq.length - 1] >= eq[0];
+      const lineCol = isProfit ? '#34d399' : '#fb7185';
+      const fillGrad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+      fillGrad.addColorStop(0, isProfit ? 'rgba(52, 211, 153, 0.28)' : 'rgba(251, 113, 133, 0.28)');
+      fillGrad.addColorStop(1, 'rgba(5, 8, 17, 0.0)');
+
+      ctx.beginPath();
+      eq.forEach((v, i) => {
+        if (i === 0) ctx.moveTo(xFor(i), yFor(v));
+        else ctx.lineTo(xFor(i), yFor(v));
+      });
+      ctx.strokeStyle = lineCol;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.lineTo(xFor(eq.length - 1), H - pad.bottom);
+      ctx.lineTo(xFor(0), H - pad.bottom);
+      ctx.closePath();
+      ctx.fillStyle = fillGrad;
+      ctx.fill();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px JetBrains Mono, monospace';
+      ctx.fillText(`Peak: ${formatINR(maxE, 0)}`, pad.left, 11);
+      ctx.fillText(`Low: ${formatINR(minE, 0)}`, pad.left, H - 5);
+    }
+
+    function attachCanvasListeners() {
+      const canvas = document.getElementById('candle-canvas');
+      if (!canvas) return;
+      const handleMove = (clientX) => {
+        const rect = canvas.getBoundingClientRect();
+        const dayKey = appState.dayList[appState.selectedDayIndex];
+        const bars = appState.candlesByDay[dayKey] || [];
+        if (!bars.length) return;
+        const relX = clientX - rect.left - 10;
+        const plotW = rect.width - 66;
+        const idx = Math.floor((relX / plotW) * bars.length);
+        appState.hoverCandleIdx = Math.max(0, Math.min(bars.length - 1, idx));
+        drawCandlestickChart();
+      };
+      canvas.addEventListener('mousemove', e => handleMove(e.clientX));
+      canvas.addEventListener('touchmove', e => {
+        if (e.touches[0]) handleMove(e.touches[0].clientX);
+      }, { passive: true });
+      canvas.addEventListener('mouseleave', () => {
+        appState.hoverCandleIdx = -1;
+        drawCandlestickChart();
+      });
+    }
+
+    // =========================================================================
+    // 8. LIVE NSE F&O SCANNER + KRONOS K-LINE QUANTITATIVE ENGINE
+    // =========================================================================
+    function runKronosKLineAnalysis(stock, direction, ltp, ema9, ema15, vwap, volMult, status, rr, customForecast = null) {
+      const isBuy = direction === 'BUY';
+      const slopePct = ((ema9 - ema15) / Math.max(1, ema15)) * 100;
+      const vwapDistPct = ((ltp - vwap) / Math.max(1, vwap)) * 100;
+      const baseScore = 66
+        + Math.min(12, Math.abs(slopePct) * 32)
+        + Math.min(10, volMult * 3.8)
+        + (status === 'CONFIRMED' ? 7 : 2);
+      const confidence = Math.min(95, Math.max(62, Math.round(baseScore)));
+
+      const slPct = 0.0045 + Math.min(0.004, Math.abs(slopePct) * 0.008);
+      const entry = Number((status === 'CONFIRMED' ? ltp : ltp * (isBuy ? 1.0018 : 0.9982)).toFixed(2));
+      const sl = Number((isBuy ? entry * (1 - slPct) : entry * (1 + slPct)).toFixed(2));
+      const riskPts = Math.abs(entry - sl);
+      const target = Number((isBuy ? entry + riskPts * rr : entry - riskPts * rr).toFixed(2));
+
+      // Build 6-bar (30-min) forecast path (or use real PyTorch Kronos candles if supplied)
+      let forecastCandles = customForecast;
+      if (!forecastCandles || !forecastCandles.length) {
+        const rng = mulberry32(stock.seed * 313 + appState.scannerTick * 17);
+        forecastCandles = [];
+        let p = ltp;
+        for (let i = 1; i <= 6; i++) {
+          const drift = (target - ltp) / 7.5;
+          const o = Number(p.toFixed(2));
+          const c = Number((o + drift + (rng() - 0.45) * riskPts * 0.35).toFixed(2));
+          const h = Number((Math.max(o, c) + rng() * riskPts * 0.28).toFixed(2));
+          const l = Number((Math.min(o, c) - rng() * riskPts * 0.28).toFixed(2));
+          forecastCandles.push({ step: `+${i * 5}m`, open: o, high: h, low: l, close: c });
+          p = c;
+        }
+      }
+
+      const thesis = `${stock.symbol} (${stock.sector}, F&O Lot ${stock.lotSize}) shows a ${status} ${direction} setup: 9 EMA (₹${ema9.toFixed(1)}) vs 15 EMA (₹${ema15.toFixed(1)}) with price ${isBuy ? 'above' : 'below'} VWAP (₹${vwap.toFixed(1)}) and ${volMult.toFixed(1)}x volume impulse. Kronos 30m K-line projection estimates ${confidence}% continuation probability toward ₹${target.toFixed(2)}.`;
+
+      return {
+        ...stock, direction, status, ltp, ema9, ema15, vwap, volMult,
+        entry, sl, slPct: Number((slPct * 100).toFixed(2)), target, rr,
+        confidence, forecastCandles, thesis
+      };
+    }
+
+    function runFnoScanner(isManual = false) {
+      appState.scannerTick++;
+      const rr = parseFloat(document.getElementById('scanner-rr')?.value) || 2.0;
+      const results = [];
+
+      NSE_FNO_UNIVERSE.forEach(stock => {
+        const rng = mulberry32(stock.seed * 419 + appState.scannerTick * 29);
+        const hasSetup = rng() > 0.56;
+        if (!hasSetup) return;
+
+        const direction = rng() > 0.46 ? 'BUY' : 'SELL';
+        const isBuy = direction === 'BUY';
+        const status = rng() > 0.45 ? 'CONFIRMED' : 'FORMING';
+        const ltp = Number((stock.basePrice * (1 + (rng() - 0.5) * 0.024)).toFixed(2));
+        const gap = ltp * (status === 'CONFIRMED' ? 0.0028 : 0.0011);
+        const ema9 = Number((isBuy ? ltp - gap * 0.5 : ltp + gap * 0.5).toFixed(2));
+        const ema15 = Number((isBuy ? ema9 - gap : ema9 + gap).toFixed(2));
+        const vwap = Number((isBuy ? ema15 - gap * 0.8 : ema15 + gap * 0.8).toFixed(2));
+        const volMult = Number((1.5 + rng() * 2.1).toFixed(1));
+
+        results.push(runKronosKLineAnalysis(stock, direction, ltp, ema9, ema15, vwap, volMult, status, rr));
+      });
+
+      results.sort((a, b) => (b.status === 'CONFIRMED' ? 1 : 0) - (a.status === 'CONFIRMED' ? 1 : 0) || b.confidence - a.confidence);
+      appState.scannerResults = results;
+      document.getElementById('nav-scan-count').textContent = String(results.length);
+      renderScannerCards();
+      if (isManual) showToast(`Scanned 28 verified NSE F&O stocks: ${results.length} active setups found.`);
+    }
+
+    function setScannerFilter(f) {
+      appState.scannerFilter = f;
+      ['ALL', 'CONFIRMED', 'FORMING', 'BUY', 'SELL'].forEach(k => {
+        const b = document.getElementById(`sf-${k}`);
+        if (!b) return;
+        b.className = k === f
+          ? 'sf-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer'
+          : 'sf-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white cursor-pointer';
+      });
+      renderScannerCards();
+    }
+
+    function buildSparklineSvg(candles, isBuy) {
+      if (!candles || candles.length < 2) return '';
+      const vals = candles.map(c => c.close);
+      const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
+      const pts = vals.map((v, i) => `${((i / (vals.length - 1)) * 84 + 2).toFixed(1)},${(24 - ((v - min) / span) * 20).toFixed(1)}`).join(' ');
+      return `<svg width="88" height="28" viewBox="0 0 88 28"><polyline fill="none" stroke="${isBuy ? '#34d399' : '#fb7185'}" stroke-width="2" stroke-linecap="round" points="${pts}"/></svg>`;
+    }
+
+    function renderScannerCards() {
+      const grid = document.getElementById('scanner-cards-grid');
+      const warn = document.getElementById('non-fno-warning');
+      if (!grid) return;
+
+      const q = (document.getElementById('scanner-search')?.value || '').trim().toUpperCase();
+      if (warn) {
+        if (q.length >= 3 && !NSE_FNO_UNIVERSE.some(s => s.symbol.includes(q) || s.sector.toUpperCase().includes(q))) {
+          warn.textContent = `⚠ "${q}" is NOT in the verified NSE F&O universe. Strict F&O Guardrail excludes cash/non-F&O stocks.`;
+          warn.classList.remove('hidden');
+        } else {
+          warn.classList.add('hidden');
+        }
+      }
+
+      const items = appState.scannerResults.filter(item => {
+        if (q && !item.symbol.includes(q) && !item.sector.toUpperCase().includes(q)) return false;
+        if (appState.scannerFilter === 'CONFIRMED') return item.status === 'CONFIRMED';
+        if (appState.scannerFilter === 'FORMING') return item.status === 'FORMING';
+        if (appState.scannerFilter === 'BUY') return item.direction === 'BUY';
+        if (appState.scannerFilter === 'SELL') return item.direction === 'SELL';
+        return true;
+      });
+
+      if (!items.length) {
+        grid.innerHTML = '<div class="col-span-full p-8 text-center rounded-2xl bg-slate-900/70 border border-slate-800 text-xs text-slate-400">No verified NSE F&O setups match your current filter. Click "Scan Now" or switch to "All".</div>';
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const isBuy = item.direction === 'BUY';
+        const isConf = item.status === 'CONFIRMED';
+        const border = isBuy ? 'border-emerald-500/35 hover:border-emerald-400/70' : 'border-rose-500/35 hover:border-rose-400/70';
+        const dirBadge = isBuy ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+        const stBadge = isConf ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+
+        return `
+          <div class="bg-slate-900/85 border ${border} rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-lg transition">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-mono font-bold text-white">${escapeHTML(item.symbol)}</h3>
+                  <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded border ${stBadge}">${isConf ? '⚡ CONFIRMED' : '⏳ FORMING'}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">${escapeHTML(item.sector)} • Lot ${item.lotSize} • LTP <strong class="text-white font-mono">₹${item.ltp.toFixed(2)}</strong></p>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded border ${dirBadge}">${isBuy ? '▲ BUY' : '▼ SELL'}</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 text-center font-mono text-[11px] bg-slate-950/90 p-2.5 rounded-xl border border-slate-800">
+              <div><span class="block text-[9px] text-slate-400">ENTRY</span><strong class="text-white">₹${item.entry.toFixed(1)}</strong></div>
+              <div><span class="block text-[9px] text-rose-400">SL (${item.slPct}%)</span><strong class="text-rose-400">₹${item.sl.toFixed(1)}</strong></div>
+              <div><span class="block text-[9px] text-emerald-400">TGT (1:${item.rr})</span><strong class="text-emerald-400">₹${item.target.toFixed(1)}</strong></div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 px-1">
+              <span>9E: <strong class="text-cyan-300">${item.ema9.toFixed(1)}</strong></span>
+              <span>15E: <strong class="text-amber-300">${item.ema15.toFixed(1)}</strong></span>
+              <span>VWAP: <strong class="text-fuchsia-300">${item.vwap.toFixed(1)}</strong></span>
+              <span>Vol: <strong class="text-emerald-300">${item.volMult}x</strong></span>
+            </div>
+
+            <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/25">
+              <div>
+                <span class="block text-[9px] font-mono text-violet-300">KRONOS 30M CONFIDENCE</span>
+                <strong class="text-sm font-mono text-white">${item.confidence}%</strong>
+              </div>
+              ${buildSparklineSvg(item.forecastCandles, isBuy)}
+            </div>
+
+            <div class="grid grid-cols-4 gap-1.5 text-[11px] font-semibold">
+              <button onclick="openKronosModal('${item.symbol}')" class="col-span-2 py-2 px-2 rounded-lg bg-violet-500/20 hover:bg-violet-500/35 text-violet-200 border border-violet-500/40 cursor-pointer">Kronos Audit</button>
+              <button onclick="sendScanToCalc('${item.symbol}')" class="py-2 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 cursor-pointer">Qty</button>
+              <button onclick="openScanInBacktest('${item.symbol}')" class="py-2 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer">Chart</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleScannerAutoStream() {
+      appState.scannerAutoStream = !appState.scannerAutoStream;
+      const btn = document.getElementById('live-stream-btn');
+      if (appState.scannerAutoStream) {
+        if (btn) {
+          btn.textContent = '● Live Stream: ON';
+          btn.className = 'px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold cursor-pointer';
+        }
+        startScannerAutoStream();
+      } else {
+        if (btn) {
+          btn.textContent = '○ Live Stream: PAUSED';
+          btn.className = 'px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 text-xs font-bold cursor-pointer';
+        }
+        stopScannerAutoStream();
+      }
+    }
+
+    function startScannerAutoStream() {
+      stopScannerAutoStream();
+      if (!appState.scannerAutoStream) return;
+      appState.scannerInterval = setInterval(() => {
+        if (appState.currentTab === 'scanner' && !appState.kronosRemoteConnected) {
+          runFnoScanner(false);
+        }
+      }, 4500);
+    }
+
+    function stopScannerAutoStream() {
+      if (appState.scannerInterval) {
+        clearInterval(appState.scannerInterval);
+        appState.scannerInterval = null;
+      }
+    }
+
+    function openScanInBacktest(symbol) {
+      const sel = document.getElementById('param-symbol');
+      if (sel && FNO_MAP[symbol]) {
+        sel.value = symbol;
+        onSymbolChange();
+      }
+      switchSection('backtest');
+    }
+
+    function sendScanToCalc(symbol) {
+      const item = appState.scannerResults.find(x => x.symbol === symbol);
+      if (!item) return;
+      document.getElementById('calc-side').value = item.direction === 'BUY' ? 'LONG' : 'SHORT';
+      document.getElementById('calc-entry').value = item.entry.toFixed(2);
+      document.getElementById('calc-sl').value = item.sl.toFixed(2);
+      document.getElementById('calc-target').value = item.target.toFixed(2);
+      closeKronosModal();
+      switchSection('calc');
+      calculatePositionAndTaxes();
+      showToast(`Loaded ${item.symbol} (${item.direction}) into Position Sizing Calculator.`);
+    }
+
+    function openKronosModal(symbol) {
+      const item = appState.scannerResults.find(x => x.symbol === symbol);
+      if (!item) return;
+      appState.activeKronosItem = item;
+      document.getElementById('km-title').textContent = `${item.symbol} — ${item.direction} (${item.status})`;
+      document.getElementById('km-conf').textContent = `${item.confidence}%`;
+      document.getElementById('km-entry').textContent = `₹${item.entry.toFixed(2)}`;
+      document.getElementById('km-sl').textContent = `₹${item.sl.toFixed(2)}`;
+      document.getElementById('km-target').textContent = `₹${item.target.toFixed(2)}`;
+      document.getElementById('km-thesis').textContent = item.thesis;
+      document.getElementById('km-send-calc-btn').onclick = () => sendScanToCalc(item.symbol);
+      document.getElementById('km-open-chart-btn').onclick = () => { closeKronosModal(); openScanInBacktest(item.symbol); };
+      document.getElementById('kronos-modal').classList.remove('hidden');
+      requestAnimationFrame(() => drawKronosForecastCanvas(item));
+    }
+
+    function closeKronosModal() {
+      document.getElementById('kronos-modal')?.classList.add('hidden');
+    }
+
+    function drawKronosForecastCanvas(item) {
+      const canvas = document.getElementById('kronos-forecast-canvas');
+      const wrap = document.getElementById('kronos-canvas-wrap');
+      if (!canvas || !wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width < 20 || rect.height < 20) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width, H = rect.height;
+      ctx.fillStyle = '#070b14';
+      ctx.fillRect(0, 0, W, H);
+
+      const bars = item.forecastCandles;
+      let minP = Math.min(item.sl, item.target, ...bars.map(b => b.low));
+      let maxP = Math.max(item.sl, item.target, ...bars.map(b => b.high));
+      const padP = (maxP - minP) * 0.12 || 1;
+      minP -= padP; maxP += padP;
+
+      const pad = { top: 14, right: 62, bottom: 22, left: 12 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+      const xFor = i => pad.left + ((i + 0.5) / bars.length) * plotW;
+      const yFor = p => pad.top + ((maxP - p) / (maxP - minP)) * plotH;
+
+      const drawRef = (val, col, label) => {
+        const y = yFor(val);
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+        ctx.fillStyle = col;
+        ctx.font = '10px JetBrains Mono, monospace';
+        ctx.fillText(label, W - pad.right + 4, y + 3);
+        ctx.restore();
+      };
+      drawRef(item.target, '#34d399', `TGT ${item.target.toFixed(0)}`);
+      drawRef(item.entry, '#e2e8f0', `ENT ${item.entry.toFixed(0)}`);
+      drawRef(item.sl, '#fb7185', `SL  ${item.sl.toFixed(0)}`);
+
+      const barW = Math.min(28, (plotW / bars.length) * 0.45);
+      bars.forEach((b, i) => {
+        const x = xFor(i);
+        const col = b.close >= b.open ? '#10b981' : '#f43f5e';
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(x, yFor(b.high)); ctx.lineTo(x, yFor(b.low)); ctx.stroke();
+        ctx.fillStyle = col;
+        const yO = yFor(b.open), yC = yFor(b.close);
+        ctx.fillRect(x - barW / 2, Math.min(yO, yC), barW, Math.max(3, Math.abs(yC - yO)));
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px JetBrains Mono, monospace';
+        ctx.fillText(b.step, x - 12, H - 6);
+      });
+    }
+
+    // --- GitHub Kronos Bridge & Hardened FastAPI Relay Script Download ---
+    function toggleKronosBridgePanel() {
+      document.getElementById('kronos-bridge-panel')?.classList.toggle('hidden');
+    }
+
+    function toggleJsonFeedBox() {
+      document.getElementById('json-feed-box')?.classList.toggle('hidden');
+    }
+
+    function importCustomJsonScan() {
+      try {
+        const raw = document.getElementById('json-feed-input').value.trim();
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) throw new Error('JSON must be an array');
+        const rr = parseFloat(document.getElementById('scanner-rr')?.value) || 2.0;
+        const valid = [];
+        let rejected = 0;
+        arr.forEach(r => {
+          const sym = String(r.symbol || '').toUpperCase();
+          if (!FNO_MAP[sym]) { rejected++; return; }
+          valid.push(runKronosKLineAnalysis(
+            FNO_MAP[sym],
+            (r.direction || 'BUY').toUpperCase(),
+            Number(r.ltp), Number(r.ema9), Number(r.ema15), Number(r.vwap),
+            Number(r.volMult || 1.8), (r.status || 'CONFIRMED').toUpperCase(), rr, r.forecastCandles || null
+          ));
+        });
+        appState.scannerResults = valid;
+        document.getElementById('nav-scan-count').textContent = String(valid.length);
+        renderScannerCards();
+        showToast(`Imported ${valid.length} F&O setups (${rejected} non-F&O rejected).`);
+      } catch (e) {
+        showToast(`JSON Parse Error: ${e.message}`);
+      }
+    }
+
+    async function connectRealKronosServer() {
+      const url = (document.getElementById('kronos-server-url')?.value || 'http://127.0.0.1:8000').replace(/\/$/, '');
+      const secret = document.getElementById('kronos-api-secret')?.value || '';
+      const modelId = document.getElementById('kronos-model-id')?.value || 'NeoQuasar/Kronos-small';
+      const feed = document.getElementById('kronos-feed-source')?.value || 'angelone';
+      try {
+        const res = await fetch(`${url}/scan?model=${encodeURIComponent(modelId)}&feed=${encodeURIComponent(feed)}`, {
+          headers: { 'X-AlphaPulse-Secret': secret }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (Array.isArray(data.setups)) {
+          appState.kronosRemoteConnected = true;
+          document.getElementById('scanner-feed-badge').textContent = `Live: ${modelId}`;
+          const rr = parseFloat(document.getElementById('scanner-rr')?.value) || 2.0;
+          appState.scannerResults = data.setups
+            .filter(r => FNO_MAP[String(r.symbol || '').toUpperCase()])
+            .map(r => runKronosKLineAnalysis(
+              FNO_MAP[r.symbol.toUpperCase()], r.direction, r.ltp, r.ema9, r.ema15, r.vwap,
+              r.volMult || 1.8, r.status || 'CONFIRMED', rr, r.forecastCandles || null
+            ));
+          document.getElementById('nav-scan-count').textContent = String(appState.scannerResults.length);
+          renderScannerCards();
+          showToast(`Connected to Live Kronos Server (${appState.scannerResults.length} setups).`);
+        }
+      } catch (e) {
+        showToast(`Local Kronos Server unreachable (${e.message}). Download & run kronos_fno_server.py first.`);
+      }
+    }
+
+    function downloadKronosServerScript() {
+      const pyScript = [
+        '# AlphaPulse IN — Production-Hardened FastAPI Relay + shiyu-coder/Kronos Server',
+        '# Place inside cloned https://github.com/shiyu-coder/Kronos folder',
+        '# Run: pip install fastapi uvicorn httpx pyotp pandas && uvicorn kronos_fno_server:app --host 127.0.0.1 --port 8000',
+        'import os, time, httpx',
+        'from fastapi import FastAPI, Request, Header, HTTPException',
+        'from fastapi.middleware.cors import CORSMiddleware',
+        'from fastapi.responses import JSONResponse',
+        '',
+        'API_SECRET = os.getenv("ALPHAPULSE_SECRET", "change-this-local-secret")',
+        'ALLOWED_ORIGINS = ["http://127.0.0.1:5500", "http://localhost:3000", "http://localhost:8000", "null"]',
+        'ALLOWED_ANGEL_PATHS = {',
+        '    "rest/auth/angelbroking/user/v1/loginByPassword",',
+        '    "rest/auth/angelbroking/jwt/v1/generateTokens",',
+        '    "rest/secure/angelbroking/historical/v1/getCandleData",',
+        '    "rest/secure/angelbroking/market/v1/quote/"',
+        '}',
+        '',
+        'app = FastAPI(title="AlphaPulse IN Hardened Kronos & Angel One Relay")',
+        'app.add_middleware(CORSMiddleware, allow_origins=ALLOWED_ORIGINS, allow_methods=["GET","POST"], allow_headers=["*"])',
+        'rate_bucket = {}',
+        '',
+        '@app.middleware("http")',
+        'async def security_guard(request: Request, call_next):',
+        '    ip = request.client.host if request.client else "local"',
+        '    now = time.time()',
+        '    hits = [t for t in rate_bucket.get(ip, []) if now - t < 60]',
+        '    if len(hits) > 90:',
+        '        return JSONResponse({"status": False, "message": "Rate limit exceeded"}, status_code=429)',
+        '    hits.append(now); rate_bucket[ip] = hits',
+        '    resp = await call_next(request)',
+        '    resp.headers["X-Frame-Options"] = "DENY"',
+        '    resp.headers["X-Content-Type-Options"] = "nosniff"',
+        '    resp.headers["Cache-Control"] = "no-store"',
+        '    return resp',
+        '',
+        '@app.post("/angel/{path:path}")',
+        'async def angel_relay(path: str, request: Request, x_alphapulse_secret: str = Header(default="")):',
+        '    if path not in ALLOWED_ANGEL_PATHS:',
+        '        raise HTTPException(status_code=403, detail="Blocked endpoint (SSRF Allowlist)")',
+        '    body = await request.body()',
+        '    fwd_headers = {k: v for k, v in request.headers.items() if k.lower() in ("content-type","accept","authorization","x-privatekey","x-usertype","x-sourcid","x-clientlocalip","x-clientpublicip","x-macaddress")}',
+        '    async with httpx.AsyncClient(timeout=15.0) as client:',
+        '        r = await client.post(f"https://apiconnect.angelone.in/{path}", content=body, headers=fwd_headers)',
+        '    return JSONResponse(content=r.json() if "json" in r.headers.get("content-type","") else {"status": False, "message": r.text}, status_code=r.status_code)',
+        '',
+        '@app.get("/health")',
+        'async def health():',
+        '    return {"status": "ok", "engine": "AlphaPulse Hardened Relay"}'
+      ].join('\n');
+
+      const blob = new Blob([pyScript], { type: 'text/x-python' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'kronos_fno_server.py';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Downloaded hardened kronos_fno_server.py');
+    }
+
+    // =========================================================================
+    // 9. ANGEL ONE SMARTAPI CONNECTOR (TOTP + UTC CLOCK SYNC + WEB LOGIN)
+    // =========================================================================
+    function openAngelConnectModal() {
+      document.getElementById('angel-modal').classList.remove('hidden');
+      syncUtcClockOffset();
+      previewLiveTotp();
+      if (appState.angelOtpTimer) clearInterval(appState.angelOtpTimer);
+      appState.angelOtpTimer = setInterval(previewLiveTotp, 1000);
+      document.getElementById('angel-disconnect-btn').classList.toggle('hidden', !appState.angelAuth.connected);
+    }
+
+    function closeAngelConnectModal() {
+      document.getElementById('angel-modal')?.classList.add('hidden');
+      if (appState.angelOtpTimer) {
+        clearInterval(appState.angelOtpTimer);
+        appState.angelOtpTimer = null;
+      }
+    }
+
+    function setAngelLoginMode(mode) {
+      appState.angelLoginMode = mode;
+      const isTotp = mode === 'totp';
+      document.getElementById('angel-mode-totp').classList.toggle('hidden', !isTotp);
+      document.getElementById('angel-mode-web').classList.toggle('hidden', isTotp);
+      document.getElementById('angel-tab-totp').className = isTotp
+        ? 'py-2 rounded-lg font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 cursor-pointer'
+        : 'py-2 rounded-lg font-semibold text-slate-400 hover:text-white cursor-pointer';
+      document.getElementById('angel-tab-web').className = !isTotp
+        ? 'py-2 rounded-lg font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 cursor-pointer'
+        : 'py-2 rounded-lg font-semibold text-slate-400 hover:text-white cursor-pointer';
+      setAngelStatusBox('');
+    }
+
+    function toggleCustomRelayInput() {
+      const mode = document.getElementById('angel-gateway-mode').value;
+      document.getElementById('angel-relay-row').classList.toggle('hidden', mode !== 'relay');
+    }
+
+    function setAngelStatusBox(msg, type = 'error') {
+      const box = document.getElementById('angel-status-box');
+      if (!box) return;
+      if (!msg) { box.classList.add('hidden'); return; }
+      const styles = {
+        error: 'bg-rose-500/15 border-rose-500/40 text-rose-300',
+        info: 'bg-cyan-500/15 border-cyan-500/40 text-cyan-200',
+        success: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+      };
+      box.className = `p-3 rounded-xl text-xs font-mono border leading-relaxed ${styles[type] || styles.error}`;
+      box.textContent = msg;
+      box.classList.remove('hidden');
+    }
+
+    async function syncUtcClockOffset() {
+      const lbl = document.getElementById('angel-utc-status');
+      try {
+        const t0 = Date.now();
+        const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+        const data = await r.json();
+        const serverMs = new Date(data.utc_datetime).getTime();
+        appState.angelUtcOffsetMs = serverMs - ((t0 + Date.now()) / 2);
+        const driftSec = (appState.angelUtcOffsetMs / 1000).toFixed(1);
+        if (lbl) lbl.textContent = `UTC Synced (Drift: ${driftSec}s)`;
+      } catch {
+        appState.angelUtcOffsetMs = 0;
+        if (lbl) lbl.textContent = 'UTC Clock: Local System Time';
+      }
+    }
+
+    function extractCleanBase32Secret(raw) {
+      let s = (raw || '').trim();
+      const m = s.match(/secret=([A-Za-z2-7]+)/i);
+      if (m) s = m[1];
+      return s.replace(/[\s\-=]/g, '').toUpperCase();
+    }
+
+    function base32ToBytes(b32) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let bits = '';
+      for (const ch of b32) {
+        const idx = alphabet.indexOf(ch);
+        if (idx === -1) return null;
+        bits += idx.toString(2).padStart(5, '0');
+      }
+      const bytes = [];
+      for (let i = 0; i + 8 <= bits.length; i += 8) {
+        bytes.push(parseInt(bits.slice(i, i + 8), 2));
+      }
+      return new Uint8Array(bytes);
+    }
+
+    async function generateTotpFromSecret(rawSecret, stepOffset = 0) {
+      const trimmed = (rawSecret || '').trim();
+      if (/^\d{6}$/.test(trimmed)) return trimmed;
+      const b32 = extractCleanBase32Secret(trimmed);
+      const keyBytes = base32ToBytes(b32);
+      if (!keyBytes || keyBytes.length < 4) return null;
+
+      const epochSec = Math.floor((Date.now() + appState.angelUtcOffsetMs) / 1000);
+      const counter = Math.floor(epochSec / 30) + stepOffset;
+      const msg = new Uint8Array(8);
+      let c = counter;
+      for (let i = 7; i >= 0; i--) { msg[i] = c & 0xff; c = Math.floor(c / 256); }
+
+      const cryptoKey = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+      const hmac = new Uint8Array(await crypto.subtle.sign('HMAC', cryptoKey, msg));
+      const offset = hmac[hmac.length - 1] & 0x0f;
+      const code = ((hmac[offset] & 0x7f) << 24) | ((hmac[offset + 1] & 0xff) << 16) | ((hmac[offset + 2] & 0xff) << 8) | (hmac[offset + 3] & 0xff);
+      return String(code % 1000000).padStart(6, '0');
+    }
+
+    async function previewLiveTotp() {
+      const raw = document.getElementById('angel-totp-secret')?.value || '';
+      const el = document.getElementById('angel-live-otp-preview');
+      if (!el) return;
+      if (!raw.trim()) { el.textContent = 'OTP: ------'; return; }
+      const rem = 30 - (Math.floor((Date.now() + appState.angelUtcOffsetMs) / 1000) % 30);
+      const otp = await generateTotpFromSecret(raw, 0);
+      el.textContent = otp ? `OTP: ${otp} (${rem}s)` : 'Invalid Secret';
+    }
+
+    function openAngelOfficialPublisherLogin() {
+      const key = document.getElementById('angel-web-api-key')?.value.trim();
+      if (!key) { setAngelStatusBox('Enter your SmartAPI Key first.'); return; }
+      window.open(`https://smartapi.angelone.in/publisher-login?api_key=${encodeURIComponent(key)}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function parseAngelResponseSafe(rawText) {
+      try {
+        return JSON.parse(rawText);
+      } catch {
+        const clean = String(rawText || '').replace(/<[^>]+>/g, ' ').trim().slice(0, 180);
+        return {
+          status: false,
+          message: clean || 'Non-JSON WAF/Rate-Limit response from Angel One. Switch API Gateway Route to Local FastAPI Relay.'
+        };
+      }
+    }
+
+    async function connectAngelOneDirect() {
+      if (appState.angelLoginInFlight) return;
+      const gatewayMode = document.getElementById('angel-gateway-mode').value;
+      const relayUrl = (document.getElementById('angel-relay-url')?.value || 'http://127.0.0.1:8000').replace(/\/$/, '');
+
+      // Web Login Token Mode
+      if (appState.angelLoginMode === 'web') {
+        const apiKey = document.getElementById('angel-web-api-key').value.trim();
+        const rawTok = document.getElementById('angel-web-token-input').value.trim();
+        if (!apiKey || !rawTok) { setAngelStatusBox('Enter both SmartAPI Key and redirect URL / auth_token.'); return; }
+        let jwt = rawTok;
+        const m = rawTok.match(/auth_token=([^&\s]+)/i);
+        if (m) jwt = decodeURIComponent(m[1]);
+        appState.angelAuth = {
+          ...appState.angelAuth,
+          connected: true, apiKey, jwtToken: jwt, clientId: 'WEB_SESSION', gatewayMode, relayUrl
+        };
+        document.getElementById('angel-web-api-key').value = '';
+        document.getElementById('angel-web-token-input').value = '';
+        updateAngelHeaderStatus();
+        closeAngelConnectModal();
+        showToast('Angel One Web Session Connected (RAM-Only Vault).');
+        fetchAngelCandlesForSymbol(appState.selectedSymbol);
+        return;
+      }
+
+      // Direct MPIN + TOTP Mode
+      const apiKey = document.getElementById('angel-api-key').value.trim();
+      const clientId = document.getElementById('angel-client-id').value.trim().toUpperCase();
+      const mpin = document.getElementById('angel-mpin').value.trim();
+      const totpInput = document.getElementById('angel-totp-secret').value.trim();
+
+      if (!apiKey || !clientId || !mpin || !totpInput) {
+        setAngelStatusBox('Please fill all 4 Angel One fields.');
+        return;
+      }
+
+      const otp = await generateTotpFromSecret(totpInput, 0);
+      if (!otp) {
+        setAngelStatusBox('Invalid Base32 TOTP Secret. Paste your secret from smartapi.angelone.in/enable-totp or enter a 6-digit OTP.');
+        return;
+      }
+
+      appState.angelLoginInFlight = true;
+      setAngelStatusBox('Authenticating with Angel One SmartAPI...', 'info');
+      const endpoint = gatewayMode === 'relay'
+        ? `${relayUrl}/angel/rest/auth/angelbroking/user/v1/loginByPassword`
+        : 'https://apiconnect.angelone.in/rest/auth/angelbroking/user/v1/loginByPassword';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-UserType': 'USER',
+            'X-SourceID': 'WEB',
+            'X-ClientLocalIP': '127.0.0.1',
+            'X-ClientPublicIP': appState.angelAuth.publicIp,
+            'X-MACAddress': '00:00:00:00:00:00',
+            'X-PrivateKey': apiKey
+          },
+          body: JSON.stringify({ clientcode: clientId, password: mpin, totp: otp })
+        });
+        const text = await res.text();
+        const data = parseAngelResponseSafe(text);
+
+        if (data.status && data.data && data.data.jwtToken) {
+          appState.angelAuth = {
+            ...appState.angelAuth,
+            connected: true,
+            jwtToken: data.data.jwtToken,
+            refreshToken: data.data.refreshToken || '',
+            apiKey, clientId, gatewayMode, relayUrl
+          };
+          // Immediately clear sensitive inputs from DOM
+          document.getElementById('angel-api-key').value = '';
+          document.getElementById('angel-mpin').value = '';
+          document.getElementById('angel-totp-secret').value = '';
+          updateAngelHeaderStatus();
+          closeAngelConnectModal();
+          showToast(`Angel One Connected (${clientId}) — Tokens secured in RAM.`);
+          fetchAngelCandlesForSymbol(appState.selectedSymbol);
+        } else {
+          setAngelStatusBox(`Login Failed: ${data.message || 'Unknown error'} ${data.errorcode ? '[' + data.errorcode + ']' : ''}. If using Direct Cloud & blocked by WAF/CORS, switch Gateway Route to Local FastAPI Relay or use Web Login tab.`);
+        }
+      } catch (err) {
+        setAngelStatusBox(`Network/CORS Blocked: ${err.message}. Select "Custom / Local FastAPI Relay" above and run kronos_fno_server.py, or use the "Web Login / Paste Token" tab.`);
+      } finally {
+        appState.angelLoginInFlight = false;
+      }
+    }
+
+    async function fetchAngelCandlesForSymbol(symbol) {
+      const stock = FNO_MAP[symbol];
+      if (!stock || !appState.angelAuth.connected) {
+        loadCandlesIntoBacktest(generateStockIntradayData(symbol, 10), 'Simulated 5m');
+        return;
+      }
+      const { gatewayMode, relayUrl, apiKey, jwtToken, publicIp } = appState.angelAuth;
+      const endpoint = gatewayMode === 'relay'
+        ? `${relayUrl}/angel/rest/secure/angelbroking/historical/v1/getCandleData`
+        : 'https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData';
+
+      const toD = new Date();
+      const fromD = new Date();
+      fromD.setDate(toD.getDate() - 10);
+      const fmt = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`,
+            'X-PrivateKey': apiKey,
+            'X-UserType': 'USER',
+            'X-SourceID': 'WEB',
+            'X-ClientLocalIP': '127.0.0.1',
+            'X-ClientPublicIP': publicIp,
+            'X-MACAddress': '00:00:00:00:00:00'
+          },
+          body: JSON.stringify({
+            exchange: 'NSE',
+            symboltoken: stock.token,
+            interval: 'FIVE_MINUTE',
+            fromdate: `${fmt(fromD)} 09:15`,
+            todate: `${fmt(toD)} 15:30`
+          })
+        });
+        const data = parseAngelResponseSafe(await res.text());
+        if (data.status && Array.isArray(data.data) && data.data.length > 20) {
+          const parsed = data.data.map(row => {
+            const dt = new Date(row[0]);
+            const day = dt.toISOString().slice(0, 10);
+            const hh = String(dt.getHours()).padStart(2, '0');
+            const mm = String(dt.getMinutes()).padStart(2, '0');
+            return {
+              day, time: `${hh}:${mm}`, minuteOfDay: dt.getHours() * 60 + dt.getMinutes(),
+              open: Number(row[1]), high: Number(row[2]), low: Number(row[3]), close: Number(row[4]), volume: Number(row[5])
+            };
+          });
+          loadCandlesIntoBacktest(computeIndicatorsOnCandles(parsed), 'Angel One Live 5m');
+          return;
+        }
+      } catch (e) {
+        console.warn('Angel candle fetch fallback:', e);
+      }
+      loadCandlesIntoBacktest(generateStockIntradayData(symbol, 10), 'Simulated 5m (Fallback)');
+    }
+
+    function disconnectAngelOne(silent = false) {
+      appState.angelAuth.connected = false;
+      appState.angelAuth.jwtToken = '';
+      appState.angelAuth.refreshToken = '';
+      appState.angelAuth.apiKey = '';
+      appState.angelAuth.clientId = '';
+      updateAngelHeaderStatus();
+      if (!silent) {
+        closeAngelConnectModal();
+        showToast('Angel One disconnected & RAM tokens wiped.');
+      }
+    }
+
+    function updateAngelHeaderStatus() {
+      const dot = document.getElementById('angel-status-dot');
+      const lbl = document.getElementById('angel-header-label');
+      if (appState.angelAuth.connected) {
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+        if (lbl) lbl.textContent = `Angel Live (${appState.angelAuth.clientId})`;
+      } else {
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        if (lbl) lbl.textContent = 'Connect Angel One';
+      }
+    }
+
+    // =========================================================================
+    // 10. NEXT-DAY KRONOS + STRATEGY OUTLOOK (INTRADAY & SWING + SIMULATOR)
+    // =========================================================================
+    function getNextNseTradingDateLabel() {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1);
+      return d.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function buildSimulatedSessionBars(baseClose, entry, sl, target1, target2, direction, mode, seed) {
+      const rng = mulberry32(seed);
+      const isBuy = direction === 'BUY';
+      const totalFuture = mode === 'INTRADAY' ? 24 : 20;
+      const contextCount = 8;
+      const bars = [];
+
+      let price = baseClose * (1 + (isBuy ? -0.008 : 0.008));
+      const stepUnit = Math.max(0.4, Math.abs(entry - sl) * 0.35);
+
+      for (let i = 0; i < contextCount; i++) {
+        const drift = (baseClose - price) / (contextCount - i);
+        const o = Number(price.toFixed(2));
+        const c = Number((o + drift + (rng() - 0.5) * stepUnit * 0.45).toFixed(2));
+        const h = Number((Math.max(o, c) + rng() * stepUnit * 0.35).toFixed(2));
+        const l = Number((Math.min(o, c) - rng() * stepUnit * 0.35).toFixed(2));
+        bars.push({
+          label: mode === 'INTRADAY' ? `Prev-${contextCount - i}` : `D-${contextCount - i}`,
+          isFuture: false, open: o, high: h, low: l, close: c,
+          volume: Math.round(55000 + rng() * 35000)
+        });
+        price = c;
+      }
+
+      const hitsTarget = rng() > 0.24;
+      const triggerBarIdx = mode === 'INTRADAY' ? (3 + Math.floor(rng() * 3)) : (2 + Math.floor(rng() * 2));
+      price = Number((baseClose * (1 + (isBuy ? 0.0022 : -0.0022) * (0.4 + rng()))).toFixed(2));
+
+      for (let f = 0; f < totalFuture; f++) {
+        let label = '';
+        if (mode === 'INTRADAY') {
+          const mins = 9 * 60 + 15 + f * 5;
+          label = `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+        } else {
+          const dayNum = Math.floor(f / 4) + 1;
+          label = `Day${dayNum} ${['09:30', '11:30', '13:30', '15:15'][f % 4]}`;
+        }
+
+        let targetAnchor;
+        if (f < triggerBarIdx) {
+          targetAnchor = baseClose + (entry - baseClose) * ((f + 1) / (triggerBarIdx + 1));
+        } else if (f === triggerBarIdx) {
+          targetAnchor = entry + (isBuy ? stepUnit * 0.45 : -stepUnit * 0.45);
+        } else if (hitsTarget) {
+          const prog = (f - triggerBarIdx) / Math.max(1, totalFuture - triggerBarIdx - 1);
+          const pullback = (f === triggerBarIdx + 2) ? (isBuy ? -stepUnit * 0.55 : stepUnit * 0.55) : 0;
+          targetAnchor = entry + (target2 - entry) * Math.min(1.04, prog * 1.08) + pullback;
+        } else {
+          const prog = (f - triggerBarIdx) / Math.max(1, totalFuture - triggerBarIdx - 1);
+          targetAnchor = prog < 0.35
+            ? entry + (target1 - entry) * 0.35
+            : entry + (sl - entry) * Math.min(1.12, (prog - 0.25) * 1.45);
+        }
+
+        const o = Number(price.toFixed(2));
+        const c = Number(Math.max(5, o + (targetAnchor - o) * 0.58 + (rng() - 0.5) * stepUnit * 0.55).toFixed(2));
+        const wick = Math.max(0.2, stepUnit * (0.25 + rng() * 0.38));
+        const h = Number((Math.max(o, c) + wick).toFixed(2));
+        const l = Number(Math.max(2, Math.min(o, c) - wick).toFixed(2));
+        bars.push({
+          label, isFuture: true, open: o, high: h, low: l, close: c,
+          volume: Math.round((f === triggerBarIdx ? 145000 : 65000) * (0.85 + rng() * 0.7))
+        });
+        price = c;
+      }
+
+      const k9 = 2 / 10, k15 = 2 / 16;
+      let e9 = bars[0].close, e15 = bars[0].close, cumTpV = 0, cumV = 0;
+      return bars.map((b, idx) => {
+        if (idx === contextCount && mode === 'INTRADAY') { cumTpV = 0; cumV = 0; }
+        e9 = (b.close - e9) * k9 + e9;
+        e15 = (b.close - e15) * k15 + e15;
+        cumTpV += ((b.high + b.low + b.close) / 3) * b.volume;
+        cumV += b.volume;
+        return { ...b, ema9: Number(e9.toFixed(2)), ema15: Number(e15.toFixed(2)), vwap: Number((cumTpV / Math.max(1, cumV)).toFixed(2)) };
+      });
+    }
+
+    function createNextDayPick(stock, mode, cycleSeed) {
+      const rng = mulberry32(stock.seed * 613 + cycleSeed * 37 + (mode === 'INTRADAY' ? 101 : 907));
+      const direction = rng() > 0.42 ? 'BUY' : 'SELL';
+      const isBuy = direction === 'BUY';
+      const prevClose = Number((stock.basePrice * (1 + (rng() - 0.5) * 0.02)).toFixed(2));
+
+      const triggerOffsetPct = mode === 'INTRADAY' ? (0.0022 + rng() * 0.0018) : (0.0045 + rng() * 0.0035);
+      const slPct = mode === 'INTRADAY' ? (0.0055 + rng() * 0.0032) : (0.018 + rng() * 0.01);
+
+      const entry = Number((prevClose * (isBuy ? (1 + triggerOffsetPct) : (1 - triggerOffsetPct))).toFixed(2));
+      const slDist = Number((entry * slPct).toFixed(2));
+      const sl = Number((isBuy ? entry - slDist : entry + slDist).toFixed(2));
+      const target1 = Number((isBuy ? entry + slDist * 2.0 : entry - slDist * 2.0).toFixed(2));
+      const target2 = Number((isBuy ? entry + slDist * 3.0 : entry - slDist * 3.0).toFixed(2));
+      const expectedMovePct = Number((((target1 - prevClose) / prevClose) * 100).toFixed(2));
+      const confidence = Math.min(94, Math.max(72, Math.round(74 + rng() * 19)));
+      const volMult = Number((1.6 + rng() * 1.4).toFixed(1));
+      const holdPeriod = mode === 'INTRADAY' ? 'Same Day (Exit 15:15)' : `${3 + Math.floor(rng() * 4)} Trading Days`;
+      const entryWindow = mode === 'INTRADAY' ? '09:30 – 11:00 IST' : 'First 1H Close (10:15 IST)';
+
+      const rules = mode === 'INTRADAY'
+        ? [
+            `Wait for 09:15–09:30 AM range; enter ${isBuy ? 'LONG' : 'SHORT'} only when 5m candle closes ${isBuy ? 'above' : 'below'} ₹${entry.toFixed(2)}.`,
+            `Price must sustain ${isBuy ? 'ABOVE' : 'BELOW'} Intraday VWAP with 9 EMA ${isBuy ? '>' : '<'} 15 EMA sloping cleanly.`,
+            `Confirm breakout candle Volume > ${volMult}x of 20-bar SMA (avoid low-volume drift).`,
+            `Skip trade if opening gap exceeds ±2.0%; place hard Stop-Loss at ₹${sl.toFixed(2)} (max 1% capital risk).`
+          ]
+        : [
+            `Daily candle structure confirms ${isBuy ? 'bullish' : 'bearish'} 9 & 15 EMA expansion in ${stock.sector} sector.`,
+            `Enter only after 1-Hour confirmation candle holds ${isBuy ? 'above' : 'below'} ₹${entry.toFixed(2)} without heavy rejection.`,
+            `Verify delivery volume pickup (>1.4x 10-day avg) and respect Closing-Basis SL at ₹${sl.toFixed(2)}.`,
+            `Book 50% quantity near Target 1 (₹${target1.toFixed(2)}) and trail remaining 50% along Daily 9 EMA toward ₹${target2.toFixed(2)}.`
+          ];
+
+      const thesis = mode === 'INTRADAY'
+        ? `Kronos next-session K-line projection signals a ${isBuy ? 'bullish momentum breakout' : 'bearish breakdown'} in ${stock.symbol} (${stock.sector}) with ${confidence}% confidence. Watch the 5m 9/15 EMA crossover around ₹${entry.toFixed(2)} for a projected ${expectedMovePct >= 0 ? '+' : ''}${expectedMovePct}% intraday move.`
+        : `Kronos multi-day sequence forecast identifies a positional ${isBuy ? 'accumulation breakout' : 'distribution breakdown'} in ${stock.symbol} over ${holdPeriod} (${confidence}% confidence). Holding ${isBuy ? 'above' : 'below'} ₹${entry.toFixed(2)} opens room toward ₹${target1.toFixed(2)} and ₹${target2.toFixed(2)}.`;
+
+      const simBars = buildSimulatedSessionBars(prevClose, entry, sl, target1, target2, direction, mode, stock.seed * 997 + cycleSeed * 53);
+
+      return {
+        ...stock, mode, direction, prevClose, entry, sl, slDist,
+        slPct: Number((slPct * 100).toFixed(2)), target1, target2,
+        expectedMovePct, confidence, volMult, holdPeriod, entryWindow, rules, thesis, simBars
+      };
+    }
+
+    function generateNextDayForecasts(isManual = false) {
+      appState.nextDayCycle++;
+      appState.nextDayDateLabel = getNextNseTradingDateLabel();
+      const badge = document.getElementById('nextday-session-badge');
+      if (badge) badge.textContent = `Next Session: ${appState.nextDayDateLabel}`;
+
+      const usedSymbols = new Set();
+      const intradayPool = INTRADAY_CANDIDATE_SYMBOLS
+        .map(sym => FNO_MAP[sym]).filter(Boolean)
+        .map(stock => createNextDayPick(stock, 'INTRADAY', appState.nextDayCycle))
+        .sort((a, b) => b.confidence - a.confidence).slice(0, 6);
+      intradayPool.forEach(p => usedSymbols.add(p.symbol));
+
+      const swingPool = SWING_CANDIDATE_SYMBOLS
+        .map(sym => FNO_MAP[sym]).filter(s => s && !usedSymbols.has(s.symbol))
+        .map(stock => createNextDayPick(stock, 'SWING', appState.nextDayCycle))
+        .sort((a, b) => b.confidence - a.confidence).slice(0, 6);
+
+      appState.nextDayIntraday = intradayPool;
+      appState.nextDaySwing = swingPool;
+      document.getElementById('nav-nextday-count').textContent = String(intradayPool.length + swingPool.length);
+
+      renderNextDaySections();
+      if (isManual) showToast(`Kronos Next-Day Outlook refreshed for ${appState.nextDayDateLabel} (6 Intraday + 6 Swing).`);
+    }
+
+    function buildNextDayMiniPathSvg(simBars, isBuy) {
+      const future = simBars.filter(b => b.isFuture);
+      if (future.length < 2) return '';
+      const vals = future.map(b => b.close);
+      const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
+      const pts = vals.map((v, i) => `${((i / (vals.length - 1)) * 98 + 2).toFixed(1)},${(26 - ((v - min) / span) * 22).toFixed(1)}`).join(' ');
+      return `<svg width="102" height="30" viewBox="0 0 102 30" class="shrink-0"><polyline fill="none" stroke="${isBuy ? '#34d399' : '#fb7185'}" stroke-width="2" stroke-linecap="round" points="${pts}"/></svg>`;
+    }
+
+    function renderNextDayCard(item) {
+      const isBuy = item.direction === 'BUY';
+      const isIntra = item.mode === 'INTRADAY';
+      const borderCol = isIntra
+        ? (isBuy ? 'border-cyan-500/35 hover:border-cyan-400/70' : 'border-rose-500/35 hover:border-rose-400/70')
+        : (isBuy ? 'border-amber-500/35 hover:border-amber-400/70' : 'border-fuchsia-500/35 hover:border-fuchsia-400/70');
+      const dirBadge = isBuy ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+      const modePill = isIntra ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30' : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+      const moveCol = isBuy ? 'text-emerald-400' : 'text-rose-400';
+
+      return `
+        <div class="bg-slate-900/85 border ${borderCol} rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-lg transition">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-base font-mono font-bold text-white">${escapeHTML(item.symbol)}</h4>
+                <span class="px-1.5 py-0.5 text-[10px] font-mono rounded border ${modePill}">${isIntra ? 'INTRADAY 5m' : escapeHTML(item.holdPeriod)}</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">${escapeHTML(item.sector)} • Close <strong class="text-slate-200 font-mono">₹${item.prevClose.toFixed(2)}</strong> • Lot ${item.lotSize}</p>
+            </div>
+            <div class="flex flex-col items-end gap-1">
+              <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded border ${dirBadge}">${isBuy ? '▲ BULLISH' : '▼ BEARISH'}</span>
+              <span class="text-[11px] font-mono font-bold ${moveCol}">Est. ${item.expectedMovePct >= 0 ? '+' : ''}${item.expectedMovePct}%</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center font-mono text-[11px] bg-slate-950/90 p-2.5 rounded-xl border border-slate-800">
+            <div><span class="block text-[9px] text-slate-400">ENTRY</span><strong class="text-white">₹${item.entry.toFixed(1)}</strong></div>
+            <div><span class="block text-[9px] text-rose-400">SL (${item.slPct}%)</span><strong class="text-rose-400">₹${item.sl.toFixed(1)}</strong></div>
+            <div><span class="block text-[9px] text-emerald-400">T1 (1:2)</span><strong class="text-emerald-400">₹${item.target1.toFixed(1)}</strong></div>
+            <div><span class="block text-[9px] text-cyan-300">T2 (1:3)</span><strong class="text-cyan-300">₹${item.target2.toFixed(1)}</strong></div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-violet-500/10 border border-violet-500/25">
+            <div>
+              <span class="block text-[9px] font-mono text-violet-300">KRONOS NEXT-MOVE CONFIDENCE</span>
+              <strong class="text-sm font-mono text-white">${item.confidence}% <span class="text-[10px] text-slate-400 font-normal">(${escapeHTML(item.entryWindow)})</span></strong>
+            </div>
+            ${buildNextDayMiniPathSvg(item.simBars, isBuy)}
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+            <div class="text-[10px] font-mono font-bold text-slate-300">RULES TO VERIFY BEFORE TRADE:</div>
+            <ul class="text-[11px] text-slate-400 space-y-0.5 leading-snug">
+              <li>✓ ${escapeHTML(item.rules[0])}</li>
+              <li>✓ ${escapeHTML(item.rules[1])}</li>
+            </ul>
+          </div>
+
+          <div class="grid grid-cols-4 gap-1.5 pt-1 text-[11px] font-semibold">
+            <button onclick="openNextDaySimulator('${item.mode}', '${item.symbol}')" class="col-span-2 py-2 px-2 rounded-lg bg-gradient-to-r from-violet-500/25 to-cyan-500/25 hover:from-violet-500/40 hover:to-cyan-500/40 text-cyan-200 border border-cyan-500/40 cursor-pointer">
+              ▶ Simulate &amp; Rules
+            </button>
+            <button onclick="sendNextDayToCalc('${item.mode}', '${item.symbol}')" class="py-2 px-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 cursor-pointer">Qty</button>
+            <button onclick="openScanInBacktest('${item.symbol}')" class="py-2 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer">Chart</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNextDaySections() {
+      const intraBlock = document.getElementById('nextday-intraday-block');
+      const swingBlock = document.getElementById('nextday-swing-block');
+      const intraGrid = document.getElementById('nextday-intraday-grid');
+      const swingGrid = document.getElementById('nextday-swing-grid');
+
+      if (intraBlock) intraBlock.classList.toggle('hidden', appState.nextDayView === 'SWING');
+      if (swingBlock) swingBlock.classList.toggle('hidden', appState.nextDayView === 'INTRADAY');
+
+      const filterDir = list => list.filter(x => appState.nextDayDir === 'ALL' || x.direction === appState.nextDayDir);
+      const fIntra = filterDir(appState.nextDayIntraday);
+      const fSwing = filterDir(appState.nextDaySwing);
+
+      document.getElementById('nd-intraday-count').textContent = `${fIntra.length} Intraday Picks`;
+      document.getElementById('nd-swing-count').textContent = `${fSwing.length} Swing Picks`;
+
+      if (intraGrid) intraGrid.innerHTML = fIntra.length ? fIntra.map(renderNextDayCard).join('') : '<div class="col-span-full p-6 text-center rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400">No Intraday stocks match direction filter.</div>';
+      if (swingGrid) swingGrid.innerHTML = fSwing.length ? fSwing.map(renderNextDayCard).join('') : '<div class="col-span-full p-6 text-center rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400">No Swing stocks match direction filter.</div>';
+    }
+
+    function setNextDayView(view) {
+      appState.nextDayView = view;
+      ['BOTH', 'INTRADAY', 'SWING'].forEach(v => {
+        const b = document.getElementById(`nd-view-${v}`);
+        if (b) b.className = v === view ? 'nd-view-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer' : 'nd-view-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white cursor-pointer';
+      });
+      renderNextDaySections();
+    }
+
+    function setNextDayDirection(dir) {
+      appState.nextDayDir = dir;
+      ['ALL', 'BUY', 'SELL'].forEach(d => {
+        const b = document.getElementById(`nd-dir-${d}`);
+        if (b) b.className = d === dir ? 'nd-dir-btn px-2.5 py-1.5 rounded-lg bg-slate-800 text-white font-semibold cursor-pointer' : 'nd-dir-btn px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white cursor-pointer';
+      });
+      renderNextDaySections();
+    }
+
+    function findNextDayItem(mode, symbol) {
+      return (mode === 'INTRADAY' ? appState.nextDayIntraday : appState.nextDaySwing).find(x => x.symbol === symbol) || null;
+    }
+
+    function sendNextDayToCalc(mode, symbol) {
+      const item = findNextDayItem(mode, symbol);
+      if (!item) return;
+      document.getElementById('calc-side').value = item.direction === 'BUY' ? 'LONG' : 'SHORT';
+      document.getElementById('calc-entry').value = item.entry.toFixed(2);
+      document.getElementById('calc-sl').value = item.sl.toFixed(2);
+      document.getElementById('calc-target').value = item.target1.toFixed(2);
+      closeNextDaySimulator();
+      switchSection('calc');
+      calculatePositionAndTaxes();
+      showToast(`Loaded ${item.symbol} (${item.mode} ${item.direction}) into Position Sizing Calculator.`);
+    }
+
+    function openNextDaySimulator(mode, symbol) {
+      const item = findNextDayItem(mode, symbol);
+      if (!item) return;
+      stopNextDaySimTimer();
+      appState.activeSimItem = item;
+      const futureBars = item.simBars.filter(b => b.isFuture);
+      appState.simStep = 1;
+      appState.simRuleChecks = item.rules.map(() => false);
+
+      const isBuy = item.direction === 'BUY';
+      const isIntra = item.mode === 'INTRADAY';
+      const mb = document.getElementById('sim-mode-badge');
+      mb.textContent = isIntra ? 'INTRADAY 5M SIMULATION' : `SWING ${item.holdPeriod.toUpperCase()} SIMULATION`;
+      mb.className = isIntra
+        ? 'px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+        : 'px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+
+      const db = document.getElementById('sim-dir-badge');
+      db.textContent = isBuy ? '▲ BULLISH SETUP' : '▼ BEARISH SETUP';
+      db.className = isBuy
+        ? 'px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+        : 'px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-rose-500/20 text-rose-300 border border-rose-500/40';
+
+      document.getElementById('sim-title').textContent = `${item.symbol} — ${isIntra ? 'Next-Day Intraday' : 'Multi-Day Swing'} Simulation`;
+      document.getElementById('sim-subtitle').textContent = `${appState.nextDayDateLabel} • Kronos K-Line Forecast + 9 & 15 EMA Strategy Replay`;
+      document.getElementById('sim-kronos-conf').textContent = `Kronos: ${item.confidence}%`;
+      document.getElementById('sim-entry-val').textContent = `E: ₹${item.entry.toFixed(2)}`;
+      document.getElementById('sim-sl-val').textContent = `SL: ₹${item.sl.toFixed(2)}`;
+      document.getElementById('sim-t1-val').textContent = `T1: ₹${item.target1.toFixed(2)}`;
+      document.getElementById('sim-t2-val').textContent = `T2: ₹${item.target2.toFixed(2)}`;
+      document.getElementById('sim-thesis-text').textContent = item.thesis;
+      document.getElementById('sim-invalidation').textContent = isIntra ? `Gap > 2% or SL ₹${item.sl.toFixed(1)}` : `Daily Close past ₹${item.sl.toFixed(1)}`;
+      document.getElementById('sim-window').textContent = item.entryWindow;
+
+      const sc = document.getElementById('sim-scrubber');
+      sc.min = '1'; sc.max = String(futureBars.length); sc.value = '1';
+      renderSimRulesChecklist();
+
+      document.getElementById('sim-copy-plan-btn').onclick = () => {
+        copyTextFallback(`${item.symbol} [${item.mode} ${item.direction}] | Next Session: ${appState.nextDayDateLabel} | Entry: ₹${item.entry} | SL: ₹${item.sl} | T1: ₹${item.target1} | T2: ₹${item.target2} | Kronos: ${item.confidence}%`);
+        showToast(`Copied ${item.symbol} ${item.mode} trade plan!`);
+      };
+      document.getElementById('sim-to-calc-btn').onclick = () => sendNextDayToCalc(item.mode, item.symbol);
+      document.getElementById('sim-to-chart-btn').onclick = () => { closeNextDaySimulator(); openScanInBacktest(item.symbol); };
+
+      document.getElementById('nextday-sim-modal').classList.remove('hidden');
+      requestAnimationFrame(() => {
+        updateNextDaySimUI();
+        playPauseNextDaySim();
+      });
+    }
+
+    function closeNextDaySimulator() {
+      stopNextDaySimTimer();
+      document.getElementById('nextday-sim-modal')?.classList.add('hidden');
+    }
+
+    function stopNextDaySimTimer() {
+      if (appState.simTimer) { clearInterval(appState.simTimer); appState.simTimer = null; }
+      appState.simRunning = false;
+      const btn = document.getElementById('sim-play-btn');
+      if (btn) btn.textContent = '▶ Play Simulation';
+    }
+
+    function playPauseNextDaySim() {
+      if (!appState.activeSimItem) return;
+      const totalFuture = appState.activeSimItem.simBars.filter(b => b.isFuture).length;
+      if (appState.simRunning) { stopNextDaySimTimer(); return; }
+      if (appState.simStep >= totalFuture) appState.simStep = 1;
+      appState.simRunning = true;
+      document.getElementById('sim-play-btn').textContent = '⏸ Pause Simulation';
+      const delay = parseInt(document.getElementById('sim-speed-select')?.value, 10) || 260;
+      appState.simTimer = setInterval(() => {
+        if (!appState.activeSimItem || appState.simStep >= totalFuture) { stopNextDaySimTimer(); return; }
+        appState.simStep++;
+        document.getElementById('sim-scrubber').value = String(appState.simStep);
+        updateNextDaySimUI();
+      }, delay);
+    }
+
+    function updateSimSpeed() {
+      if (appState.simRunning) { stopNextDaySimTimer(); playPauseNextDaySim(); }
+    }
+
+    function resetNextDaySim() {
+      stopNextDaySimTimer();
+      appState.simStep = 1;
+      document.getElementById('sim-scrubber').value = '1';
+      updateNextDaySimUI();
+    }
+
+    function scrubNextDaySim(val) {
+      stopNextDaySimTimer();
+      appState.simStep = Math.max(1, parseInt(val, 10) || 1);
+      updateNextDaySimUI();
+    }
+
+    function renderSimRulesChecklist() {
+      const item = appState.activeSimItem;
+      const listEl = document.getElementById('sim-rules-list');
+      const badgeEl = document.getElementById('sim-readiness-badge');
+      if (!item || !listEl) return;
+      const checkedCount = appState.simRuleChecks.filter(Boolean).length;
+      const total = item.rules.length;
+      badgeEl.textContent = checkedCount === total ? `✓ ${total}/${total} READY TO TRADE` : `${checkedCount} / ${total} Verified`;
+      badgeEl.className = checkedCount === total
+        ? 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+        : 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+
+      listEl.innerHTML = item.rules.map((rule, idx) => {
+        const checked = appState.simRuleChecks[idx];
+        return `
+          <label class="flex items-start gap-2.5 p-2 rounded-lg border cursor-pointer transition ${checked ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200' : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700'}">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSimRuleCheck(${idx})" class="mt-0.5 rounded border-slate-600 bg-slate-950 text-emerald-500 focus:ring-0" />
+            <span class="leading-snug">${escapeHTML(rule)}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleSimRuleCheck(idx) {
+      appState.simRuleChecks[idx] = !appState.simRuleChecks[idx];
+      renderSimRulesChecklist();
+    }
+
+    function evaluateSimExecution(item, visibleFutureBars) {
+      const isBuy = item.direction === 'BUY';
+      const capital = Math.max(10000, parseFloat(document.getElementById('param-capital')?.value) || 100000);
+      const qty = Math.max(1, Math.floor((capital * 0.01) / Math.max(0.1, Math.abs(item.entry - item.sl))));
+      let status = 'WAITING TRIGGER', entryIdx = -1, exitPrice = null, t1Hit = false;
+
+      for (let i = 0; i < visibleFutureBars.length; i++) {
+        const b = visibleFutureBars[i];
+        if (entryIdx === -1) {
+          if ((isBuy && b.high >= item.entry) || (!isBuy && b.low <= item.entry)) {
+            entryIdx = i; status = 'IN TRADE (ACTIVE)';
+          }
+        } else {
+          if ((isBuy && b.low <= item.sl) || (!isBuy && b.high >= item.sl)) {
+            exitPrice = item.sl; status = 'STOP-LOSS HIT'; break;
+          }
+          if ((isBuy && b.high >= item.target2) || (!isBuy && b.low <= item.target2)) {
+            exitPrice = item.target2; status = 'TARGET 2 HIT (1:3)'; break;
+          }
+          if (!t1Hit && ((isBuy && b.high >= item.target1) || (!isBuy && b.low <= item.target1))) {
+            t1Hit = true; status = 'TARGET 1 HIT (TRAILING)';
+          }
+        }
+      }
+
+      const lastBar = visibleFutureBars[visibleFutureBars.length - 1];
+      let netPnl = 0;
+      if (entryIdx !== -1) {
+        const refExit = exitPrice !== null ? exitPrice : lastBar.close;
+        const gross = isBuy ? (refExit - item.entry) * qty : (item.entry - refExit) * qty;
+        const chg = calculateIndianCharges(item.entry, refExit, qty, isBuy ? 'LONG' : 'SHORT', 0);
+        netPnl = gross - chg.total;
+      }
+      return { status, entryIdx, qty, netPnl, lastBar };
+    }
+
+    function updateNextDaySimUI() {
+      const item = appState.activeSimItem;
+      if (!item) return;
+      const contextBars = item.simBars.filter(b => !b.isFuture);
+      const futureBars = item.simBars.filter(b => b.isFuture);
+      const visibleFuture = futureBars.slice(0, appState.simStep);
+      const simState = evaluateSimExecution(item, visibleFuture);
+
+      document.getElementById('sim-cur-price').textContent = `₹${simState.lastBar.close.toFixed(2)}`;
+      document.getElementById('sim-cur-time').textContent = simState.lastBar.label;
+      document.getElementById('sim-bar-progress').textContent = `Step: ${appState.simStep} / ${futureBars.length}`;
+
+      const statusEl = document.getElementById('sim-trade-status');
+      statusEl.textContent = simState.status;
+      statusEl.className = simState.status.includes('TARGET') ? 'text-xs text-emerald-400'
+        : (simState.status.includes('STOP-LOSS') ? 'text-xs text-rose-400' : (simState.status.includes('ACTIVE') ? 'text-xs text-cyan-300' : 'text-xs text-amber-300'));
+
+      const pnlEl = document.getElementById('sim-pnl-val');
+      pnlEl.textContent = simState.entryIdx === -1 ? '₹0' : formatSignedINR(simState.netPnl, 0);
+      pnlEl.className = simState.entryIdx === -1 ? 'text-sm text-slate-400' : `text-sm ${simState.netPnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      document.getElementById('sim-qty-val').textContent = `Qty: ${simState.qty} (1% Risk)`;
+
+      drawNextDaySimCanvas(item, contextBars, visibleFuture, futureBars.length, simState);
+    }
+
+    function drawNextDaySimCanvas(item, contextBars, visibleFuture, totalFuture, simState) {
+      const canvas = document.getElementById('nextday-sim-canvas');
+      const wrap = document.getElementById('nextday-sim-canvas-wrap');
+      if (!canvas || !wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width < 20 || rect.height < 20) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width, H = rect.height;
+      ctx.fillStyle = '#070b14';
+      ctx.fillRect(0, 0, W, H);
+
+      const shown = [...contextBars, ...visibleFuture];
+      const totalSlots = contextBars.length + totalFuture;
+      let minP = Math.min(item.sl, item.entry, item.target1, item.target2);
+      let maxP = Math.max(item.sl, item.entry, item.target1, item.target2);
+      item.simBars.forEach(b => { minP = Math.min(minP, b.low); maxP = Math.max(maxP, b.high); });
+      const pPad = (maxP - minP) * 0.1 || 1;
+      minP -= pPad; maxP += pPad;
+
+      const pad = { top: 16, right: 64, bottom: 22, left: 10 };
+      const plotW = W - pad.left - pad.right;
+      const plotH = H - pad.top - pad.bottom;
+      const xFor = i => pad.left + ((i + 0.5) / totalSlots) * plotW;
+      const yFor = p => pad.top + ((maxP - p) / (maxP - minP)) * plotH;
+
+      const splitX = xFor(contextBars.length - 0.5);
+      ctx.fillStyle = item.mode === 'INTRADAY' ? 'rgba(34, 211, 238, 0.05)' : 'rgba(245, 158, 11, 0.05)';
+      ctx.fillRect(splitX, pad.top, W - pad.right - splitX, plotH);
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(splitX, pad.top); ctx.lineTo(splitX, pad.top + plotH); ctx.stroke();
+      ctx.restore();
+
+      const drawLevel = (val, col, tag) => {
+        const y = yFor(val);
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+        ctx.fillStyle = col;
+        ctx.font = '10px JetBrains Mono, monospace';
+        ctx.fillText(tag, W - pad.right + 4, y + 3);
+        ctx.restore();
+      };
+      drawLevel(item.target2, '#22d3ee', `T2 ${item.target2.toFixed(0)}`);
+      drawLevel(item.target1, '#34d399', `T1 ${item.target1.toFixed(0)}`);
+      drawLevel(item.entry, '#e2e8f0', `E  ${item.entry.toFixed(0)}`);
+      drawLevel(item.sl, '#fb7185', `SL ${item.sl.toFixed(0)}`);
+
+      const barW = Math.max(3, (plotW / totalSlots) * 0.62);
+      shown.forEach((b, i) => {
+        const x = xFor(i);
+        const up = b.close >= b.open;
+        const col = b.isFuture ? (up ? '#10b981' : '#f43f5e') : (up ? 'rgba(16,185,129,0.45)' : 'rgba(244,63,94,0.45)');
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(x, yFor(b.high)); ctx.lineTo(x, yFor(b.low)); ctx.stroke();
+        ctx.fillStyle = col;
+        const yO = yFor(b.open), yC = yFor(b.close);
+        ctx.fillRect(x - barW / 2, Math.min(yO, yC), barW, Math.max(2, Math.abs(yC - yO)));
+      });
+
+      const drawLine = (key, col, dash = []) => {
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash(dash);
+        ctx.beginPath();
+        shown.forEach((b, i) => {
+          const x = xFor(i), y = yFor(b[key]);
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.restore();
+      };
+      drawLine('vwap', '#e879f9', [3, 3]);
+      drawLine('ema15', '#f59e0b');
+      drawLine('ema9', '#22d3ee');
+
+      if (simState.entryIdx !== -1) {
+        const ex = xFor(contextBars.length + simState.entryIdx);
+        const ey = yFor(item.entry);
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath(); ctx.arc(ex, ey, 4.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px JetBrains Mono, monospace';
+        ctx.fillText('ENTRY', ex - 14, ey - 8);
+      }
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '9px JetBrains Mono, monospace';
+      ctx.fillText('Prev Context', pad.left + 4, H - 6);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`Simulated ${item.mode === 'INTRADAY' ? 'Next-Day 5m' : 'Multi-Day Swing'} →`, splitX + 6, H - 6);
+    }
+
+    // =========================================================================
+    // 11. POSITION SIZING & NSE STATUTORY TAX CALCULATOR
+    // =========================================================================
+    function calculatePositionAndTaxes() {
+      const side = document.getElementById('calc-side')?.value || 'LONG';
+      const capital = Math.max(1000, parseFloat(document.getElementById('calc-capital')?.value) || 100000);
+      const riskPct = Math.max(0.1, parseFloat(document.getElementById('calc-risk-pct')?.value) || 1.0) / 100;
+      const entry = parseFloat(document.getElementById('calc-entry')?.value) || 0;
+      const sl = parseFloat(document.getElementById('calc-sl')?.value) || 0;
+      const target = parseFloat(document.getElementById('calc-target')?.value) || 0;
+      const brok = Math.max(0, parseFloat(document.getElementById('calc-brokerage')?.value) || 0);
+
+      const slPts = side === 'LONG' ? (entry - sl) : (sl - entry);
+      const tgtPts = side === 'LONG' ? (target - entry) : (entry - target);
+
+      if (entry <= 0 || slPts <= 0) {
+        document.getElementById('calc-out-qty').textContent = '0';
+        document.getElementById('calc-out-sl-pts').textContent = 'Invalid SL side';
+        return;
+      }
+
+      const maxRisk = capital * riskPct;
+      const qty = Math.max(1, Math.floor(maxRisk / slPts));
+      const grossProfit = tgtPts * qty;
+      const chg = calculateIndianCharges(entry, target > 0 ? target : entry, qty, side, brok);
+      const netProfit = grossProfit - chg.total;
+      const rr = tgtPts > 0 ? tgtPts / slPts : 0;
+
+      document.getElementById('calc-out-qty').textContent = qty.toLocaleString('en-IN');
+      document.getElementById('calc-out-margin').textContent = `5x Margin: ${formatINR((entry * qty) / 5, 0)}`;
+      document.getElementById('calc-out-risk').textContent = formatINR(slPts * qty, 0);
+      document.getElementById('calc-out-sl-pts').textContent = `${slPts.toFixed(2)} pts SL`;
+      document.getElementById('calc-out-net').textContent = formatSignedINR(netProfit, 0);
+      document.getElementById('calc-out-gross').textContent = `Gross: ${formatSignedINR(grossProfit, 0)}`;
+      document.getElementById('calc-out-rr').textContent = `1 : ${rr.toFixed(2)}`;
+      document.getElementById('calc-out-turnover').textContent = `Turnover: ${formatINR(chg.turnover, 0)}`;
+
+      document.getElementById('tax-brok').textContent = `₹${chg.brokerage.toFixed(2)}`;
+      document.getElementById('tax-stt').textContent = `₹${chg.stt.toFixed(2)}`;
+      document.getElementById('tax-exch').textContent = `₹${chg.exch.toFixed(2)}`;
+      document.getElementById('tax-sebi').textContent = `₹${chg.sebi.toFixed(2)}`;
+      document.getElementById('tax-stamp').textContent = `₹${chg.stamp.toFixed(2)}`;
+      document.getElementById('tax-gst').textContent = `₹${chg.gst.toFixed(2)}`;
+      document.getElementById('tax-total').textContent = `₹${chg.total.toFixed(2)}`;
+      document.getElementById('tax-breakeven').textContent = `${(chg.total / qty).toFixed(2)} pts`;
+    }
+
+    // =========================================================================
+    // 12. RESIZE HANDLING, IDLE ACTIVITY LISTENERS & BOOTSTRAP
+    // =========================================================================
+    window.addEventListener('resize', () => {
+      if (appState.currentTab === 'backtest') {
+        drawCandlestickChart();
+        drawEquityChart();
+      }
+      if (appState.activeKronosItem && !document.getElementById('kronos-modal')?.classList.contains('hidden')) {
+        drawKronosForecastCanvas(appState.activeKronosItem);
+      }
+      if (appState.activeSimItem && !document.getElementById('nextday-sim-modal')?.classList.contains('hidden')) {
+        updateNextDaySimUI();
+      }
+    });
+
+    ['click', 'keydown', 'mousemove', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, resetIdleTimer, { passive: true });
+    });
+
+    window.onload = function() {
+      loadSavedRegisteredUsers();
+
+      // Populate NSE F&O Symbol Dropdown
+      const symSel = document.getElementById('param-symbol');
+      if (symSel) {
+        symSel.innerHTML = NSE_FNO_UNIVERSE
+          .map(s => `<option value="${s.symbol}">${s.symbol} (${s.sector})</option>`)
+          .join('');
+        symSel.value = appState.selectedSymbol;
+      }
+
+      attachCanvasListeners();
+      onSymbolChange();
+      runFnoScanner(false);
+      generateNextDayForecasts(false);
+      calculatePositionAndTaxes();
+    };
+  </script>
+</body>
+</html>

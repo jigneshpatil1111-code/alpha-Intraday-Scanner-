@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlphaPulse IN — Master Quant Trading Terminal | 9 & 15 EMA + VWAP NSE F&O</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Three.js (r128) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/custom.css" />
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-[#050811] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- ===================================================================== -->
+  <!-- TOP UNIFIED HEADER BAR                                                -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#050811]/92 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Badges -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-emerald-400 to-violet-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/20">
+          αP
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-extrabold tracking-tight text-white">AlphaPulse IN</h1>
+            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">ALL 179+ F&amp;O STOCKS</span>
+            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">9/15 EMA + VWAP</span>
+          </div>
+          <p class="text-[11px] font-mono text-slate-400">Unified Institutional Trading Terminal • AI Alpha Confluence Engine</p>
+        </div>
+      </div>
+
+      <!-- Live Telemetry & Status Badges -->
+      <div class="flex flex-wrap items-center gap-2.5 text-xs font-mono">
+        <!-- Market Breadth -->
+        <div class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2">
+          <span class="text-slate-400 text-[11px]">BREADTH:</span>
+          <span class="text-emerald-400 font-bold">▲ <span id="market-bull-count">--</span></span>
+          <span class="text-rose-400 font-bold">▼ <span id="market-bear-count">--</span></span>
+        </div>
+
+        <!-- Backend WebSocket Status -->
+        <div class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2">
+          <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="backend-status-label" class="text-slate-300 text-[11px]">FASTAPI SYNCED</span>
+        </div>
+
+        <!-- Paper Trading Account -->
+        <div class="px-3 py-1.5 rounded-xl bg-violet-500/15 border border-violet-500/40 text-violet-300 font-bold flex items-center gap-1.5">
+          <span>⚡ CAPITAL: ₹5,00,000</span>
+        </div>
+
+        <!-- Refresh Universe Button -->
+        <button onclick="loadScannerUniverse()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition flex items-center gap-1">
+          ↻ Sync
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE                                                        -->
+  <!-- ===================================================================== -->
+  <main class="max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- =================================================================== -->
+    <!-- SECTION 1: ⭐ AI HIGH-PROBABILITY PROFIT PICKS (THE PROFIT ENGINE)    -->
+    <!-- =================================================================== -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 text-lg">⭐</span>
+          <h2 class="text-base font-extrabold text-white tracking-tight">AI High-Probability Profit Picks</h2>
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+            Top Confluence (9/15 EMA + VWAP + Vol Surge)
+          </span>
+        </div>
+        <span class="text-xs font-mono text-slate-400">Strict 1:2+ Risk-Reward Ratio</span>
+      </div>
+
+      <!-- Cards Container (Populated via JS) -->
+      <div id="top-profit-picks-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Rendered dynamically via app.js -->
+        <div class="p-4 rounded-3xl glass-panel border border-slate-800 text-slate-400 text-xs font-mono text-center py-6">
+          Scanning 179 F&amp;O stocks for institutional breakout confluence...
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 2: 3D SPATIAL MARKET MATRIX VIEWPORT (Three.js)             -->
+    <!-- =================================================================== -->
+    <div class="glass-panel-glow rounded-3xl p-4 sm:p-5 space-y-3 relative">
+      
+      <!-- Viewport Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+        <div>
+          <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+            <span>3D Spatial Market Matrix</span>
+            <span class="text-xs font-mono font-normal text-cyan-400">• Real-Time Elevation &amp; Momentum</span>
+          </h2>
+          <p class="text-xs text-slate-400">Pillar height represents % Change &amp; Volume. Emerald = Bullish (EMA 9 &gt; 15 &amp; Price &gt; VWAP), Crimson = Bearish, Golden Ring = Top Alpha Pick.</p>
+        </div>
+
+        <!-- Camera Controls -->
+        <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800 text-xs font-mono">
+          <button id="cam-iso" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 transition">3D Isometric</button>
+          <button id="cam-top" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 transition">Top-Down Heatmap</button>
+          <button id="cam-close" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-cyan-500/20 text-slate-200 hover:text-cyan-300 transition">Focus Flyover</button>
+        </div>
+      </div>
+
+      <!-- 3D Canvas Container -->
+      <div id="viewport-3d">
+        <!-- Floating Active Stock HUD Overlay -->
+        <div class="hud-overlay top-4 left-4 p-4 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-cyan-500/40 shadow-2xl space-y-2.5 min-w-[270px]">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <span id="hud-symbol" class="text-xl font-extrabold text-white tracking-tight">RELIANCE</span>
+              <span id="hud-lot" class="text-[10px] font-mono text-slate-400 ml-2">Lot: 500</span>
+            </div>
+            <div id="hud-signal" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+              STRONG_BUY
+            </div>
+          </div>
+
+          <div class="flex items-baseline gap-2">
+            <span id="hud-ltp" class="text-2xl font-black font-mono text-white">₹1295.00</span>
+            <span id="hud-change" class="text-sm font-mono font-bold text-emerald-400">+1.45%</span>
+          </div>
+
+          <!-- Technical Indicators Grid -->
+          <div class="grid grid-cols-3 gap-1.5 pt-1 text-[11px] font-mono text-center">
+            <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[9px] text-cyan-400">9 EMA</div>
+              <div id="hud-ema9" class="font-bold text-slate-200">₹1298.5</div>
+            </div>
+            <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[9px] text-violet-400">15 EMA</div>
+              <div id="hud-ema15" class="font-bold text-slate-200">₹1292.0</div>
+            </div>
+            <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="text-[9px] text-amber-400">VWAP</div>
+              <div id="hud-vwap" class="font-bold text-slate-200">₹1290.2</div>
+            </div>
+          </div>
+
+          <!-- Quick Trade Action Buttons -->
+          <div class="grid grid-cols-2 gap-2 pt-1 font-mono text-xs">
+            <button onclick="executeQuickPaperOrder(state.selectedSymbol, 'BUY')" class="py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+              BUY Long
+            </button>
+            <button onclick="executeQuickPaperOrder(state.selectedSymbol, 'SELL')" class="py-2 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-black shadow-lg shadow-rose-500/20 transition cursor-pointer">
+              SELL Short
+            </button>
+          </div>
+        </div>
+
+        <!-- Floating Hint Bottom -->
+        <div class="hud-overlay bottom-3 right-4 px-3 py-1.5 rounded-xl bg-slate-950/70 backdrop-blur-md border border-slate-800 text-[11px] text-slate-400 font-mono">
+          💡 Click any pillar to chart • Drag mouse to rotate • Scroll to zoom
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 3: UNIFIED WORKSPACE TABS                                   -->
+    <!-- =================================================================== -->
+    <div class="flex items-center gap-2 p-1.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 overflow-x-auto">
+      <button id="tab-btn-scanner" onclick="switchTab('scanner')" class="py-2 px-4 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition whitespace-nowrap">
+        📊 All F&amp;O Universe Scanner (179+ Stocks)
+      </button>
+      <button id="tab-btn-backtest" onclick="switchTab('backtest')" class="py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition whitespace-nowrap">
+        📈 5-Min Pro Chart &amp; Backtest
+      </button>
+      <button id="tab-btn-predictor" onclick="switchTab('predictor')" class="py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition whitespace-nowrap">
+        🔮 Next-Day Predictor &amp; Replay
+      </button>
+      <button id="tab-btn-paper" onclick="switchTab('paper')" class="py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition whitespace-nowrap">
+        💼 Paper Trading OMS &amp; P&amp;L
+      </button>
+      <button id="tab-btn-taxcalc" onclick="switchTab('taxcalc')" class="py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition whitespace-nowrap">
+        🧮 Position Sizing &amp; Indian Tax Calc
+      </button>
+      <button id="tab-btn-broker" onclick="switchTab('broker')" class="py-2 px-4 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition whitespace-nowrap">
+        ⚙ Broker Connect (Angel/Dhan)
+      </button>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: ALL NSE F&O SCANNER (179+ STOCKS WITH SECTOR FILTER)         -->
+    <!-- =================================================================== -->
+    <section id="tab-content-scanner" class="glass-panel rounded-3xl p-5 space-y-4">
+      
+      <!-- Filters and Search Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>NSE F&amp;O Master Setup Scanner</span>
+            <span id="scanner-total-count" class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">179 Stocks</span>
+          </h3>
+          <p class="text-xs text-slate-400">9 &amp; 15 EMA Crossover + VWAP filter across all official liquid F&amp;O components.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Search input -->
+          <input id="scanner-search" type="text" placeholder="Search stock or sector..." class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 font-mono w-48" />
+          
+          <!-- Sort dropdown -->
+          <select id="scanner-sort" class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-cyan-500">
+            <option value="alpha_score">Sort by Alpha Score (High to Low)</option>
+            <option value="change_pct">Sort by % Change</option>
+            <option value="ltp">Sort by Stock Price</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Sector Filter Chips -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+        <button onclick="filterBySector('ALL')" data-sector="ALL" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition">All F&amp;O</button>
+        <button onclick="filterBySector('TOP_PICKS')" data-sector="TOP_PICKS" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">★ Top Profit Picks</button>
+        <button onclick="filterBySector('BANKING')" data-sector="BANKING" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Banking &amp; NBFC</button>
+        <button onclick="filterBySector('IT')" data-sector="IT" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">IT Tech</button>
+        <button onclick="filterBySector('AUTO')" data-sector="AUTO" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Auto</button>
+        <button onclick="filterBySector('METALS')" data-sector="METALS" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Metals</button>
+        <button onclick="filterBySector('ENERGY')" data-sector="ENERGY" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Energy &amp; Oil</button>
+        <button onclick="filterBySector('PHARMA')" data-sector="PHARMA" class="sector-filter-btn px-3 py-1.5 rounded-xl text-xs font-mono font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition">Pharma</button>
+      </div>
+
+      <!-- Scanner Table -->
+      <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+        <table class="w-full text-left border-collapse text-xs font-mono">
+          <thead class="sticky top-0 bg-slate-950/95 backdrop-blur-md z-10">
+            <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase tracking-wider">
+              <th class="py-3 px-3">Symbol &amp; Sector</th>
+              <th class="py-3 px-3">LTP</th>
+              <th class="py-3 px-3">24h Change</th>
+              <th class="py-3 px-3 text-cyan-400">9 EMA</th>
+              <th class="py-3 px-3 text-violet-400">15 EMA</th>
+              <th class="py-3 px-3 text-amber-400">VWAP</th>
+              <th class="py-3 px-3">Signal</th>
+              <th class="py-3 px-3 text-amber-400">Alpha Score</th>
+              <th class="py-3 px-3 text-right">Paper Action</th>
+            </tr>
+          </thead>
+          <tbody id="scanner-table-body" class="divide-y divide-slate-800/40">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: 5-MIN PRO CHART & BACKTEST ENGINE                           -->
+    <!-- =================================================================== -->
+    <section id="tab-content-backtest" class="hidden glass-panel rounded-3xl p-5 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>5-Minute Interactive Candlestick Chart</span>
+            <span class="text-cyan-400 font-mono text-xs">(EMA 9/15 + VWAP Overlays)</span>
+          </h3>
+          <p class="text-xs text-slate-400">Backtest engine with realistic Indian statutory charges (STT, Stamp Duty, GST, Exchange turnover fees).</p>
+        </div>
+
+        <div class="flex items-center gap-2 text-xs font-mono">
+          <button onclick="loadBacktestData(state.selectedSymbol)" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition">
+            ▶ Run Backtest on Active Stock
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Candlestick Chart Container -->
+      <div class="w-full h-80 rounded-2xl bg-slate-950 border border-slate-800 p-2 relative overflow-hidden">
+        <canvas id="candlestick-canvas" class="w-full h-full block"></canvas>
+      </div>
+
+      <!-- Backtest Performance Metric Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="text-[10px] font-mono text-slate-400">WIN RATE</div>
+          <div id="bt-win-rate" class="text-lg font-bold font-mono text-white">--</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="text-[10px] font-mono text-slate-400">TOTAL TRADES</div>
+          <div id="bt-total-trades" class="text-lg font-bold font-mono text-white">--</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="text-[10px] font-mono text-slate-400">PROFIT FACTOR</div>
+          <div id="bt-profit-factor" class="text-lg font-bold font-mono text-cyan-400">--</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="text-[10px] font-mono text-slate-400">STATUTORY CHARGES</div>
+          <div id="bt-charges" class="text-lg font-bold font-mono text-amber-400">--</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div class="text-[10px] font-mono text-slate-400">NET REALIZED P&amp;L</div>
+          <div id="bt-net-pnl" class="text-lg font-bold font-mono text-emerald-400">--</div>
+        </div>
+      </div>
+
+      <!-- Executed Trades Log Table -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-mono font-bold text-slate-300">Simulated Executed Trades</h4>
+        <div class="overflow-x-auto max-h-56 overflow-y-auto">
+          <table class="w-full text-left border-collapse text-xs font-mono">
+            <thead>
+              <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+                <th class="py-2 px-3">Trade #</th>
+                <th class="py-2 px-3">Side</th>
+                <th class="py-2 px-3">Entry Time</th>
+                <th class="py-2 px-3">Entry Price</th>
+                <th class="py-2 px-3">Exit Time</th>
+                <th class="py-2 px-3">Exit Price</th>
+                <th class="py-2 px-3">Qty</th>
+                <th class="py-2 px-3">Taxes &amp; Brok.</th>
+                <th class="py-2 px-3">Net P&amp;L</th>
+                <th class="py-2 px-3">Exit Reason</th>
+              </tr>
+            </thead>
+            <tbody id="bt-trades-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: NEXT-DAY INTRADAY & SWING PREDICTOR & REPLAY                 -->
+    <!-- =================================================================== -->
+    <section id="tab-content-predictor" class="hidden glass-panel rounded-3xl p-5 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-white">Next-Day Intraday &amp; Swing Predictor</h3>
+          <p class="text-xs text-slate-400">Rules checklist + candle-by-candle replay simulator for high-probability setups.</p>
+        </div>
+        <span class="px-3 py-1 rounded-xl bg-violet-500/20 text-violet-300 border border-violet-500/40 text-xs font-mono font-bold">
+          Model: shiyu-coder/Kronos + 9/15 VWAP Confluence
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <div class="text-slate-400">Intraday Setup Criteria</div>
+          <div class="space-y-1 text-slate-300 text-[11px]">
+            <div>✓ 9 EMA &gt; 15 EMA &amp; Close &gt; VWAP</div>
+            <div>✓ Volume &gt; 1.5x 20-period SMA</div>
+            <div>✓ Entry on 5-min candle close</div>
+            <div>✓ SL: Below VWAP / 1:2 RR Target</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <div class="text-slate-400">Swing Setup Criteria</div>
+          <div class="space-y-1 text-slate-300 text-[11px]">
+            <div>✓ Daily 20 EMA Support Bounce</div>
+            <div>✓ 15-Minute 9/15 EMA Golden Cross</div>
+            <div>✓ Institutional Delivery Volume Surge</div>
+            <div>✓ Holding Period: 2 to 5 Trading Days</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <div class="text-slate-400">AI Next-Day Projection</div>
+          <div class="text-lg font-bold text-emerald-400">HIGH CONVICTION BULLISH</div>
+          <p class="text-slate-500 text-[11px]">Forward 25-minute trajectory projects higher swing highs with 86% probability.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 4: PAPER TRADING OMS & LIVE P&L                                 -->
+    <!-- =================================================================== -->
+    <section id="tab-content-paper" class="hidden glass-panel rounded-3xl p-5 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-white">Paper Trading Order Management System (OMS)</h3>
+          <p class="text-xs text-slate-400">Live order matching, trailing stop loss, and real-time statutory tax calculations.</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-400">Total Paper P&amp;L:</span>
+          <span id="paper-total-pnl" class="text-lg font-mono font-bold text-emerald-400">₹0.00</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs font-mono">
+          <thead>
+            <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
+              <th class="py-2.5 px-3">Order ID</th>
+              <th class="py-2.5 px-3">Symbol</th>
+              <th class="py-2.5 px-3">Side</th>
+              <th class="py-2.5 px-3">Qty</th>
+              <th class="py-2.5 px-3">Entry Price</th>
+              <th class="py-2.5 px-3">Current Price</th>
+              <th class="py-2.5 px-3">Charges (STT/GST)</th>
+              <th class="py-2.5 px-3">Net P&amp;L</th>
+              <th class="py-2.5 px-3">Status</th>
+              <th class="py-2.5 px-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="paper-orders-tbody">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 5: POSITION SIZING & REAL INDIAN TAX CALCULATOR                 -->
+    <!-- =================================================================== -->
+    <section id="tab-content-taxcalc" class="hidden glass-panel rounded-3xl p-5 space-y-5">
+      <div>
+        <h3 class="text-base font-bold text-white">Institutional Position Sizing &amp; Statutory Tax Calculator</h3>
+        <p class="text-xs text-slate-400">Calculate exact quantities based on 1% risk rules and realistic Indian statutory charges (STT, Stamp Duty, GST, Exchange fees).</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 font-mono text-xs">
+        <!-- Input Form -->
+        <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+          <h4 class="font-bold text-cyan-400">Position Parameters</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1">Trading Capital (₹)</label>
+              <input id="calc-capital" type="number" value="100000" oninput="calculatePositionSize()" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1">Risk Per Trade (%)</label>
+              <input id="calc-risk-pct" type="number" value="1.0" step="0.5" oninput="calculatePositionSize()" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1">Entry Price (₹)</label>
+              <input id="calc-entry" type="number" value="1295" oninput="calculatePositionSize()" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-1">Stop Loss Price (₹)</label>
+              <input id="calc-sl" type="number" value="1285" oninput="calculatePositionSize()" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            </div>
+            <div class="col-span-2">
+              <label class="block text-[10px] text-slate-400 mb-1">Stock Lot Size (F&amp;O)</label>
+              <input id="calc-lot" type="number" value="500" oninput="calculatePositionSize()" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Breakdown -->
+        <div class="lg:col-span-6 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+          <h4 class="font-bold text-emerald-400">Institutional Sizing &amp; Taxes</h4>
+          <div class="space-y-2 text-slate-300">
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900">
+              <span class="text-slate-400">Safe Lot Quantity:</span>
+              <strong id="calc-res-qty" class="text-white font-bold">500 Shares (1 Lot)</strong>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900">
+              <span class="text-slate-400">Total Statutory Charges (Roundtrip):</span>
+              <strong id="calc-res-charges" class="text-amber-400 font-bold">₹128.45</strong>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900">
+              <span class="text-slate-400">Breakeven Points Needed:</span>
+              <strong id="calc-res-breakeven" class="text-cyan-300 font-bold">₹0.26 / Share</strong>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900">
+              <span class="text-slate-400">Max Risk Capital If SL Hit:</span>
+              <strong id="calc-res-maxloss" class="text-rose-400 font-bold">₹1,128.45</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 6: BROKER & RELAY SETTINGS                                      -->
+    <!-- =================================================================== -->
+    <section id="tab-content-broker" class="hidden glass-panel rounded-3xl p-5 space-y-4">
+      <div>
+        <h3 class="text-base font-bold text-white">Broker Connections &amp; FastAPI Relay</h3>
+        <p class="text-xs text-slate-400">Configure zero-delay broker feeds (Angel One SmartAPI, DhanHQ, Kite Connect) and RAM-only secret security.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+          <h4 class="font-bold text-emerald-400">Angel One SmartAPI</h4>
+          <p class="text-slate-400 text-[11px]">Zero-delay institutional tick streaming via SmartAPI WebSockets.</p>
+          <div class="space-y-2">
+            <input type="text" placeholder="Client Code (e.g. A12345)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            <input type="password" placeholder="TOTP Secret Key" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            <button class="w-full py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 font-bold transition">
+              Connect SmartAPI
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+          <h4 class="font-bold text-cyan-400">DhanHQ v2 Connect</h4>
+          <p class="text-slate-400 text-[11px]">Free unlimited API trading and live order execution.</p>
+          <div class="space-y-2">
+            <input type="text" placeholder="Dhan Client ID" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            <input type="password" placeholder="Access Token" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white" />
+            <button class="w-full py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-bold transition">
+              Connect DhanHQ
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/terminal_3d.js"></script>
+  <script src="js/live_chart.js"></script>
+  <script src="js/ws_client.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

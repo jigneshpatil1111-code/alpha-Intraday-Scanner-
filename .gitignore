@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local environment & secrets
+.env
+.env.local
+
+# Database
+data/*.db
+data/*.sqlite3
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# IDE and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
